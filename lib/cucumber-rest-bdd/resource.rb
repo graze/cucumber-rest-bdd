@@ -12,7 +12,7 @@ end
 
 # GET
 
-When(/^I request (?:a|the) (.+?)(?: with (?:key|id))? "([^"]*)"$/) do |resource, token|
+When(/^I request (?:an?|the) (.+?)(?: with (?:key|id))? "([^"]*)"$/) do |resource, token|
     resource_name = get_resource(resource)
     url = get_url("#{resource_name}/#{token}")
     steps %Q{When I send a GET request to "#{url}"}
@@ -46,22 +46,15 @@ end
 
 # POST
 
-When(/^I request to create a ([^:]+?)$/) do |resource|
+When(/^I request to create an? ([^:]+?)$/) do |resource|
     resource_name = get_resource(resource)
     url = get_url("#{resource_name}")
     steps %Q{When I send a POST request to "#{url}"}
 end
 
-When(/^I request to create a ([^"]+?) with:$/) do |resource, params|
+When(/^I request to create an? ([^"]+?) with:$/) do |resource, params|
     resource_name = get_resource(resource)
-    request_hash = {}
-    params.hashes.each do |row|
-        name, value, type = row["attribute"], row["value"], row["type"]
-        value = resolve(value)
-        value.gsub!(/\\n/, "\n")
-        type.gsub!(/numeric/, 'integer')
-        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
-    end
+    request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)
     url = get_url("#{resource_name}")
     steps %Q{
@@ -75,16 +68,17 @@ end
 
 # PUT
 
-When(/^I request to create a ([^"]+?) "([^"]+)" with:$/) do |resource, id, params|
+When(/^I request to create an? ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |resource, id|
     resource_name = get_resource(resource)
-    request_hash = {}
-    params.hashes.each do |row|
-        name, value, type = row["attribute"], row["value"], row["type"]
-        value = resolve(value)
-        value.gsub!(/\\n/, "\n")
-        type.gsub!(/numeric/, 'integer')
-        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
-    end
+    url = get_url("#{resource_name}/#{id}")
+    steps %Q{
+        When I send a PUT request to "#{url}"
+    }
+end
+
+When(/^I request to create an? ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
+    resource_name = get_resource(resource)
+    request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)
     url = get_url("#{resource_name}/#{id}")
     steps %Q{
@@ -98,16 +92,9 @@ end
 
 # PATCH
 
-When(/^I request to modify the (.+?) "([^"+])" with:$/) do |resource, id, params|
+When(/^I request to modify the (.+?)(?: with (?:key|id))? "([^"+])" with:$/) do |resource, id, params|
     resource_name = get_resource(resource)
-    request_hash = {}
-    params.hashes.each do |row|
-        name, value, type = row["attribute"], row["value"], row["type"]
-        value = resolve(value)
-        value.gsub!(/\\n/, "\n")
-        type.gsub!(/numeric/, 'integer')
-        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
-    end
+    request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)
     url = get_url("#{resource_name}/#{id}")
     steps %Q{
@@ -143,14 +130,8 @@ Then(/^the response is a list (?:of|containing) (?:at least|more than) (#{CAPTUR
     raise %/Expected at least #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@repsponse.to_json_s}/ if list.count < count.to_i
 end
 
-Then(/(#{CAPTURE_INT}|\d+) (?:.*?) ha(?:s|ve) the following (?:data )?attributes:$/) do |count, table|
-  expected_item = table.hashes.each_with_object({}) do |row, hash|
-    name, value, type = row["attribute"], row["value"], row["type"]
-    value = resolve(value)
-    value.gsub!(/\\n/, "\n")
-    type.gsub!(/numeric/, 'integer')
-    hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
-  end
+Then(/(#{CAPTURE_INT}|\d+) (?:.*?) ha(?:s|ve) the following (?:data )?attributes:$/) do |count, params|
+  expected_item = get_attributes(params.hashes)
   data = @response.get_as_type get_root_json_path(), 'array'
   matched_items = data.select { |item| (expected_item.to_a - item.to_a).empty? }
   raise %/Expected #{count} items in array with attributes, found: #{matched_items.count}\n#{@response.to_json_s}/ if matched_items.count != count

@@ -16,7 +16,19 @@ The following environment variables modify how this will operate:
 
 ## Resource Handling
 
-## GET
+Attribute types:
+The following types are supported:
+
+| type    | common name | example   |
+|---------|-------------|-----------|
+| numeric | integer     | 12        |
+| integer | integer     | 05        |
+| string  | string      | "text"    |
+| array   | array       | ["a"]     |
+| object  | object      | {"a":"b"} |
+
+## Retrieve Items
+
 ```gherkin
 When I request (?:a|the) (.+?)(?: with (?:key|id))? "([^"]*)"
 When I request a list of ([^:]+)
@@ -38,7 +50,8 @@ When I request a list of tokens with:
   -> GET http://url/tokens?apid=1&type=login
 ```
 
-## DELETE
+## Delete Items
+
 ```gherkin
 When I request to (?:delete|remove) the (.+) "([^"]*)"
 
@@ -48,7 +61,8 @@ When I request to remove the item "7487584353"
   -> DELETE http://url/items/7487584353
 ```
 
-## POST
+## Create Items
+
 ```gherkin
 When I request to create a ([^:]+?)
 When I request to create a (.+?) with:
@@ -64,9 +78,48 @@ When I request to create a token with:
     | type      | string  | login |
   -> POST http://url/tokens
   -> {"apid":1, "type": "login"}
+
+When I request to create a ([^"]+?)(?: with (?:key|id))? "([^"]+)"
+When I request to create a ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:
+    | attribute | type    | value |
+    | param 1   | numeric | 1     |
+    | param 2   | string  | val   |
+
+When I requets to create a token "5"
+  -> PUT http://url/tokens/5
+When I request to create a item "1" with:
+    | attribute | type   | value     |
+    | title     | string | super wow |
+  -> PUT http://url/items/1
+  -> {"title":"super wow"}
+When I request to create an item with id "2" with:
+    | attribute | type   | value     |
+    | title     | string | amazings! |
+  -> PUT http://url/items/2
+  -> {"title":"amazings!"}
+```
+
+## Update Items
+
+```gherkin
+When I request to modify the (.+?)(?: with (?:key|id))?  "([^"+])" with:
+    | attribute | type   | value |
+    | key       | string | value |
+
+When I request to modify the token "3" with:
+    | attribute | type   | value    |
+    | expires   | string | tomorrow |
+  -> PATCH http://url/tokens/3
+  -> {"expires":"tomorrow"}
+When I request to modify the item with id "4" with:
+    | attribute | type    | value |
+    | visits    | numeric | 4     |
+  -> PATCH http://url/items/4
+  -> {"visits":4}
 ```
 
 ## Status Checking
+
 ```gherkin
 Then the request (?:is|was) successful
 Then the request (?:is|was) successful and (?:a resource|.+) (?:is|was) created

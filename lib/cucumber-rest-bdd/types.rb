@@ -40,3 +40,13 @@ def get_parameter(name)
     name = name.camelize(:lower) if (ENV.has_key?('field_camel') && ENV['field_camel'] == 'true')
     name
 end
+
+def get_attributes(hashes)
+    attributes = hashes.each_with_object({}) do |row, hash|
+      name, value, type = row["attribute"], row["value"], row["type"]
+      value = resolve(value)
+      value.gsub!(/\\n/, "\n")
+      type.gsub!(/numeric/, 'integer')
+      hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
+    end
+end
