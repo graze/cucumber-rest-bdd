@@ -14,3 +14,8 @@ RUN gem build cucumber-rest-bdd.gemspec \
     && rm -rf /usr/local/cucumber-rest-bdd
 
 WORKDIR /opt/src
+
+ENV field_separator=_
+ENV field_camel=false
+ENV resource_single=false
+ENV cucumber_api_verbose=false

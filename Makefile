@@ -1,4 +1,4 @@
-TAG := graze/rest-bdd
+TAG := graze/cucumber-rest-bdd
 RUN := docker run --rm -it -v $(PWD):/opt/src -w /opt/src ${TAG}
 
 build:

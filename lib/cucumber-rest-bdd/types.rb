@@ -38,4 +38,5 @@ def get_parameter(name)
     separator = ENV.has_key?('field_separator') ? ENV['field_separator'] : '_'
     name = name.parameterize(separator: separator)
     name = name.camelize(:lower) if (ENV.has_key?('field_camel') && ENV['field_camel'] == 'true')
+    name
 end
