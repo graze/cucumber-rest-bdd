@@ -4,6 +4,12 @@ require 'active_support/inflector'
 require 'cucumber-rest-bdd/url'
 require 'cucumber-rest-bdd/types'
 
+Given(/^I am a client$/) do
+    steps %Q{
+      Given I send "application/json" and accept JSON
+    }
+end
+
 # GET
 
 When(/^I request (?:a|the) (.+?)(?: with (?:key|id))? "([^"]*)"$/) do |resource, token|
