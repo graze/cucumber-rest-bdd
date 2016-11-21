@@ -6,8 +6,7 @@ LABEL version="0.1" \
 
 RUN gem install cucumber cucumber-api activesupport
 
-COPY lib/ /usr/local/cucumber-rest-bdd/lib
-COPY cucumber-rest-bdd.gemspec /usr/local/cucumber-rest-bdd/
+COPY . /usr/local/cucumber-rest-bdd
 WORKDIR /usr/local/cucumber-rest-bdd
 
 RUN gem build cucumber-rest-bdd.gemspec \
