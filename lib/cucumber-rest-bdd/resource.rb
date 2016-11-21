@@ -1,0 +1,151 @@
+require 'cucumber-api/response'
+require 'cucumber-api/steps'
+require 'active_support/inflector'
+require 'cucumber-rest-bdd/url'
+require 'cucumber-rest-bdd/types'
+
+# GET
+
+When(/^I request (?:a|the) (.+?)(?: with (?:key|id))? "([^"]*)"$/) do |resource, token|
+    resource_name = get_resource(resource)
+    url = get_url("#{resource_name}/#{token}")
+    steps %Q{When I send a GET request to "#{url}"}
+end
+
+When(/^I request a list of ([^:]+)$/) do |resource|
+    resource_name = get_resource(resource)
+    url = get_url("#{resource_name}")
+    steps %Q{When I send a GET request to "#{url}"}
+end
+
+When(/^I request a list of (.+) with:$/) do |resource, params|
+    resource_name = get_resource(resource)
+    url = get_url("#{resource_name}")
+    unless params.rows_hash.empty?
+        query = params.rows_hash.map{|key, value| %/#{get_parameter(key)}=#{resolve(value)}/}.join("&")
+        url = "#{url}?#{query}"
+    end
+    steps %Q{
+        When I send a GET request to "#{url}"
+    }
+end
+
+# DELETE
+
+When(/^I request to (?:delete|remove) the (.+) "([^"]*)"$/) do |resource, token|
+    resource_name = get_resource(resource)
+    url = get_url("#{resource_name}/#{token}")
+    steps %Q{When I send a DELETE request to "#{url}"}
+end
+
+# POST
+
+When(/^I request to create a ([^:]+?)$/) do |resource|
+    resource_name = get_resource(resource)
+    url = get_url("#{resource_name}")
+    steps %Q{When I send a POST request to "#{url}"}
+end
+
+When(/^I request to create a ([^"]+?) with:$/) do |resource, params|
+    resource_name = get_resource(resource)
+    request_hash = {}
+    params.hashes.each do |row|
+        name, value, type = row["attribute"], row["value"], row["type"]
+        value = resolve(value)
+        value.gsub!(/\\n/, "\n")
+        type.gsub!(/numeric/, 'integer')
+        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
+    end
+    json = MultiJson.dump(request_hash)
+    url = get_url("#{resource_name}")
+    steps %Q{
+        When I set JSON request body to:
+            """
+            #{json}
+            """
+        And I send a POST request to "#{url}"
+    }
+end
+
+# PUT
+
+When(/^I request to create a ([^"]+?) "([^"]+)" with:$/) do |resource, id, params|
+    resource_name = get_resource(resource)
+    request_hash = {}
+    params.hashes.each do |row|
+        name, value, type = row["attribute"], row["value"], row["type"]
+        value = resolve(value)
+        value.gsub!(/\\n/, "\n")
+        type.gsub!(/numeric/, 'integer')
+        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
+    end
+    json = MultiJson.dump(request_hash)
+    url = get_url("#{resource_name}/#{id}")
+    steps %Q{
+        When I set JSON request body to:
+            """
+            #{json}
+            """
+        And I send a PUT request to "#{url}"
+    }
+end
+
+# PATCH
+
+When(/^I request to modify the (.+?) "([^"+])" with:$/) do |resource, id, params|
+    resource_name = get_resource(resource)
+    request_hash = {}
+    params.hashes.each do |row|
+        name, value, type = row["attribute"], row["value"], row["type"]
+        value = resolve(value)
+        value.gsub!(/\\n/, "\n")
+        type.gsub!(/numeric/, 'integer')
+        request_hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
+    end
+    json = MultiJson.dump(request_hash)
+    url = get_url("#{resource_name}/#{id}")
+    steps %Q{
+        When I set JSON request body to:
+            """
+            #{json}
+            """
+        And I send a PATCH request to "#{url}"
+    }
+end
+
+# response interrogation
+
+Then(/^the response has the following (?:data )?attributes:$/) do |table|
+  table.hashes.each do |row|
+      name, value, type = row["attribute"], row["value"], row["type"]
+      formatted_name = get_parameter(name)
+      formatted_type = type.parameterize
+      value.gsub!(/\\n/, "\n")
+      json_path = %/#{get_root_json_path()}#{formatted_name}/
+      @response.get_as_type_and_check_value json_path, formatted_type, resolve(value)
+  end
+end
+
+Then(/^the response is a list (?:of|containing) (#{CAPTURE_INT}|\d+) .*?$/) do |count|
+    steps %Q{
+        Then the JSON response should have "#{get_root_json_path()}" of type array with #{count} entries
+    }
+end
+
+Then(/^the response is a list (?:of|containing) (?:at least|more than) (#{CAPTURE_INT}|\d+) .*?$/) do |count|
+    list = @response.get_as_type get_root_json_path(), 'array'
+    raise %/Expected at least #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@repsponse.to_json_s}/ if list.count < count.to_i
+end
+
+Then(/(#{CAPTURE_INT}|\d+) (?:.*?) ha(?:s|ve) the following (?:data )?attributes:$/) do |count, table|
+  expected_item = table.hashes.each_with_object({}) do |row, hash|
+    name, value, type = row["attribute"], row["value"], row["type"]
+    value = resolve(value)
+    value.gsub!(/\\n/, "\n")
+    type.gsub!(/numeric/, 'integer')
+    hash[get_parameter(name)] = value.to_type(type.camelize.constantize)
+  end
+  data = @response.get_as_type get_root_json_path(), 'array'
+  matched_items = data.select { |item| (expected_item.to_a - item.to_a).empty? }
+  raise %/Expected #{count} items in array with attributes, found: #{matched_items.count}\n#{@response.to_json_s}/ if matched_items.count != count
+end
