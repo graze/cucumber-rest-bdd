@@ -68,7 +68,7 @@ end
 
 # PUT
 
-When(/^I request to create an? ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |resource, id|
+When(/^I request to (?:create|replace) an? ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |resource, id|
     resource_name = get_resource(resource)
     url = get_url("#{resource_name}/#{id}")
     steps %Q{
@@ -76,7 +76,7 @@ When(/^I request to create an? ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |re
     }
 end
 
-When(/^I request to create an? ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
+When(/^I request to (?:create|replace) an? ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
     resource_name = get_resource(resource)
     request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)
@@ -92,7 +92,7 @@ end
 
 # PATCH
 
-When(/^I request to modify the (.+?)(?: with (?:key|id))? "([^"+])" with:$/) do |resource, id, params|
+When(/^I request to modify the (.+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
     resource_name = get_resource(resource)
     request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)

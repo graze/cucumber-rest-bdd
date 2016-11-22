@@ -1,0 +1,13 @@
+version: '2'
+services:
+    test-server:
+        image: clue/json-server
+        volumes:
+            - ./server/db.json:/data/db.json:ro
+
+    runner:
+        image: graze/cucumber-rest-bdd
+        build: .
+        volumes:
+            - .:/opt/src
+        working_dir: /opt/src

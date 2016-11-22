@@ -58,28 +58,26 @@ Feature: Performing different rest methods
         And the response has the following attributes:
             | attribute | type    | value |
             | User Id   | numeric | 1     |
-            | Id        | numeric | 101   |
             | Title     | string  | foo   |
             | Body      | string  | bar   |
 
     Scenario: Remove an item
-        When I request to remove the post "1"
+        When I request to remove the post "20"
         Then the request is successful
 
     Scenario: Modify an item
-        When I request to modify the post "1" with:
+        When I request to modify the post "21" with:
             | attribute | type    | value |
             | Title     | string  | foo   |
         Then the request is successful
         And the response has the following attributes:
             | attribute | type    | value |
-            | User Id   | numeric | 1     |
-            | Id        | numeric | 1     |
+            | User Id   | numeric | 3     |
             | Title     | string  | foo   |
-            | Body      | string  | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
+            | Body      | string  | repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt |
 
-    Scenario: Create an item with Id
-        When I request to create a post "1" with:
+    Scenario: Update an item with Id
+        When I request to create a post "22" with:
             | attribute | type    | value |
             | Title     | string  | foo   |
             | Body      | string  | bar   |
@@ -88,6 +86,6 @@ Feature: Performing different rest methods
         And the response has the following attributes:
             | attribute | type    | value |
             | User Id   | numeric | 1     |
-            | Id        | numeric | 1     |
+            | Id        | numeric | 22    |
             | Title     | string  | foo   |
             | Body      | string  | bar   |

@@ -2,7 +2,19 @@ require 'cucumber-api/response'
 require 'cucumber-api/steps'
 
 Then(/^the request (?:is|was) successful$/) do
-    steps %Q{Then the response status should be "200"}
+    raise %/Expected Successful response code 2xx but was #{@response.code}/ if @response.code < 200 || @response.code >= 300
+end
+
+Then(/^the request (?:is|was) redirected$/) do
+    raise %/Expected redirected response code 3xx but was #{@response.code}/ if @response.code < 300 || @response.code >= 400
+end
+
+Then(/^(?:it|the request) fail(?:s|ed)$/) do
+    raise %/Expected failed response code 4xx but was #{@response.code}/ if @response.code < 400 || @response.code >= 500
+end
+
+Then(/^(?:it|the request) error(?:ed)$/) do
+    raise %/Expected failed response code 5xx but was #{@response.code}/ if @response.code < 500 || @response.code >= 600
 end
 
 Then(/^the request (?:is|was) successful and (?:a resource|.+) (?:is|was) created$/) do
