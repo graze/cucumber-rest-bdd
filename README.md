@@ -9,12 +9,30 @@ This is based from: http://gregbee.ch/blog/effective-api-testing-with-cucumber
 The following environment variables modify how this will operate:
 
 - `endpoint` - (string) the base url to call for each request
-- `root_key` - (string) the root data key (if applicable) (for example: `"data"` if all responses have a `{"data":{}}` field)
+- `data_key` - (string) the root data key (if applicable) (for example: `"data"` if all responses have a `{"data":{}}` field)
 - `field_separator` - (string) the separator used between words by the api
 - `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields
 - `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default is not)
 
-## Resource Handling
+## Resources
+
+A resource "name" is attempted to be retrieved from the given name of the item to be retrieved. This pluralises, ensures everything is lower case, removes any unparameterisable characters and uses a `-` separator.
+
+```
+Token -> tokens
+User -> users
+Big Life -> big-lifes
+octopus -> octopi
+```
+
+If the environment variable: `resource_single` is set to `true` then it will not attempt to pluralise the resources.
+
+```
+Token -> token
+User -> user
+```
+
+## Attribute Types
 
 Attribute types:
 The following types are supported:
@@ -37,7 +55,7 @@ When I request a list of (.+) with:
     | param 2 | value 2 |
 
 When I request a thing with key "bla"
-  -> GET http://url/thing/bla
+  -> GET http://url/things/bla
 When I request the Token "e88f75e25307fa26ca699cb5c31bfb9f"
   -> GET http://url/tokens/e88f75e25307fa26ca699cb5c31bfb9f
 When I request a Send Soon "435623"
