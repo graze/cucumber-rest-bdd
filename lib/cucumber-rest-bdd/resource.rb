@@ -68,7 +68,7 @@ end
 
 # PUT
 
-When(/^I request to (?:create|replace) an? ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |resource, id|
+When(/^I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)"$/) do |resource, id|
     resource_name = get_resource(resource)
     url = get_url("#{resource_name}/#{id}")
     steps %Q{
@@ -76,7 +76,7 @@ When(/^I request to (?:create|replace) an? ([^"]+?)(?: with (?:key|id))? "([^"]+
     }
 end
 
-When(/^I request to (?:create|replace) an? ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
+When(/^I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:$/) do |resource, id, params|
     resource_name = get_resource(resource)
     request_hash = get_attributes(params.hashes)
     json = MultiJson.dump(request_hash)
@@ -135,4 +135,14 @@ Then(/(#{CAPTURE_INT}|\d+) (?:.*?) ha(?:s|ve) the following (?:data )?attributes
   data = @response.get_as_type get_root_json_path(), 'array'
   matched_items = data.select { |item| (expected_item.to_a - item.to_a).empty? }
   raise %/Expected #{count} items in array with attributes, found: #{matched_items.count}\n#{@response.to_json_s}/ if matched_items.count != count
+end
+
+# value capture
+
+When(/^I save (?:attribute )?"([^"]+)"$/) do |attribute|
+    steps %Q{When I grab "#{get_root_json_path()}#{get_parameter(attribute)}"}
+end
+
+When(/^I save (?:attribute )?"([^"]+)" to "([^"]+)"$/) do |attribute, ref|
+    steps %Q{When I grab "#{get_root_json_path()}#{get_parameter(attribute)}" as "#{ref}"}
 end

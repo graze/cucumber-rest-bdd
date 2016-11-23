@@ -4,6 +4,8 @@ A set of Behavioural tests that can be run against a REST API.
 
 This is based from: http://gregbee.ch/blog/effective-api-testing-with-cucumber
 
+A list of [Steps](STEPS.md) shows the comparison between Behavioural and Functional tests provided by this package.
+
 ## Configuration
 
 The following environment variables modify how this will operate:
@@ -97,20 +99,20 @@ When I request to create a token with:
   -> POST http://url/tokens
   -> {"apid":1, "type": "login"}
 
-When I request to create a ([^"]+?)(?: with (?:key|id))? "([^"]+)"
-When I request to create a ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:
+When I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)"
+When I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:
     | attribute | type    | value |
     | param 1   | numeric | 1     |
     | param 2   | string  | val   |
 
-When I requets to create a token "5"
+When I request to create a token "5"
   -> PUT http://url/tokens/5
 When I request to create a item "1" with:
     | attribute | type   | value     |
     | title     | string | super wow |
   -> PUT http://url/items/1
   -> {"title":"super wow"}
-When I request to create an item with id "2" with:
+When I request to replace an item with id "2" with:
     | attribute | type   | value     |
     | title     | string | amazings! |
   -> PUT http://url/items/2
