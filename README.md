@@ -16,6 +16,79 @@ The following environment variables modify how this will operate:
 - `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields
 - `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default is not)
 
+## Examples
+
+- For a full list of steps see: [STEPS](STEPS.md)
+- These examples are taken from [methods.feature](features/step_definitions/methods.feature)
+
+### Retrieve items
+
+```gherkin
+Given I am a client
+When I request the post "1"
+Then the request was successful
+And the response has the following attributes:
+    | attribute | type    | value |
+    | User Id   | numeric | 1     |
+    | Id        | numeric | 1     |
+    | Title     | string  | sunt aut facere repellat provident occaecati excepturi optio reprehenderit |
+    | Body      | string  | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
+```
+
+```gherkin
+Given I am a client
+When I request a list of posts with:
+    | User Id | 2 |
+Then the request is successful
+And the response is a list of at least 2 posts
+And one response has the following attributes:
+    | attribute | type    | value |
+    | User Id   | numeric | 2     |
+    | Id        | numeric | 11    |
+    | Title     | string  | et ea vero quia laudantium autem |
+    | Body      | string  | delectus reiciendis molestiae occaecati non minima eveniet qui voluptatibus\\naccusamus in eum beatae sit\\nvel qui neque voluptates ut commodi qui incidunt\nut animi commodi |
+```
+
+### Creation
+
+```gherkin
+Given I am a client
+When I request to create a post with:
+    | attribute | type    | value |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+    | User Id   | numeric | 1     |
+Then the request is successful and a post was created
+And the response has the following attributes:
+    | attribute | type    | value |
+    | User Id   | numeric | 1     |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+```
+
+### Removal
+
+```gherkin
+Given I am a client
+When I request to remove the post "20"
+Then the request is successful
+```
+
+### Modification
+
+```gherkin
+Given I am a client
+When I request to modify the post "21" with:
+    | attribute | type    | value |
+    | Title     | string  | foo   |
+Then the request is successful
+And the response has the following attributes:
+    | attribute | type    | value |
+    | User Id   | numeric | 3     |
+    | Title     | string  | foo   |
+    | Body      | string  | repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt |
+```
+
 ## Resources
 
 A resource "name" is attempted to be retrieved from the given name of the item to be retrieved. This pluralises, ensures everything is lower case, removes any unparameterisable characters and uses a `-` separator.
@@ -34,7 +107,9 @@ Token -> token
 User -> user
 ```
 
-## Attribute Types
+## Attributes
+
+### Types
 
 Attribute types:
 The following types are supported:
@@ -47,162 +122,7 @@ The following types are supported:
 | array   | array       | ["a"]     |
 | object  | object      | {"a":"b"} |
 
-## Retrieve Items
-
-```gherkin
-When I request (?:a|the) (.+?)(?: with (?:key|id))? "([^"]*)"
-When I request a list of ([^:]+)
-When I request a list of (.+) with:
-    | param 1 | value 1 |
-    | param 2 | value 2 |
-
-When I request a thing with key "bla"
-  -> GET http://url/things/bla
-When I request the Token "e88f75e25307fa26ca699cb5c31bfb9f"
-  -> GET http://url/tokens/e88f75e25307fa26ca699cb5c31bfb9f
-When I request a Send Soon "435623"
-  -> GET http://url/send-soons/435623
-When I request a list of tokens
-  -> GET http://url/tokens
-When I request a list of tokens with:
-    | apid | 1     |
-    | type | login |
-  -> GET http://url/tokens?apid=1&type=login
-```
-
-## Delete Items
-
-```gherkin
-When I request to (?:delete|remove) the (.+) "([^"]*)"
-
-When I request to delete the token "e88f75e25307fa26ca699cb5c31bfb9f"
-  -> DELETE http://url/tokens/e88f75e25307fa26ca699cb5c31bfb9f
-When I request to remove the item "7487584353"
-  -> DELETE http://url/items/7487584353
-```
-
-## Create Items
-
-```gherkin
-When I request to create a ([^:]+?)
-When I request to create a (.+?) with:
-    | attribute | type    | value   |
-    | param 1   | string  | value 1 |
-    | param 2   | numeric | 2       |
-
-When I request to create a token
-  -> POST http://url/tokens
-When I request to create a token with:
-    | attribute | type    | value |
-    | apid      | numeric | 1     |
-    | type      | string  | login |
-  -> POST http://url/tokens
-  -> {"apid":1, "type": "login"}
-
-When I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)"
-When I request to (?:create|replace) (?:an?|the) ([^"]+?)(?: with (?:key|id))? "([^"]+)" with:
-    | attribute | type    | value |
-    | param 1   | numeric | 1     |
-    | param 2   | string  | val   |
-
-When I request to create a token "5"
-  -> PUT http://url/tokens/5
-When I request to create a item "1" with:
-    | attribute | type   | value     |
-    | title     | string | super wow |
-  -> PUT http://url/items/1
-  -> {"title":"super wow"}
-When I request to replace an item with id "2" with:
-    | attribute | type   | value     |
-    | title     | string | amazings! |
-  -> PUT http://url/items/2
-  -> {"title":"amazings!"}
-```
-
-## Update Items
-
-```gherkin
-When I request to modify the (.+?)(?: with (?:key|id))?  "([^"+])" with:
-    | attribute | type   | value |
-    | key       | string | value |
-
-When I request to modify the token "3" with:
-    | attribute | type   | value    |
-    | expires   | string | tomorrow |
-  -> PATCH http://url/tokens/3
-  -> {"expires":"tomorrow"}
-When I request to modify the item with id "4" with:
-    | attribute | type    | value |
-    | visits    | numeric | 4     |
-  -> PATCH http://url/items/4
-  -> {"visits":4}
-```
-
-## Status Checking
-
-```gherkin
-Then the request (?:is|was) successful
-Then the request (?:is|was) successful and (?:a resource|.+) (?:is|was) created
-Then the request (?:is|was) successfully accepted
-Then the request (?:is|was) successful and (?:no|an empty) response body is returned
-Then (?:it|the request) fail(?:s|ed) because it (?:is|was) invalid
-Then (?:it|the request) fail(?:s|ed) because (?:.+) (?:is|was|am|are) unauthori[sz]ed
-Then (?:it|the request) fail(?:s|ed) because (?:.+) (?:is|was) forbidden
-Then (?:it|the request) fail(?:s|ed) because the (?:.+) (?:is|was) not found
-Then (?:it|the request) fail(?:s|ed) because it (?:is|was) not allowed
-Then (?:it|the request) fail(?:s|ed) because there (?:is|was) a conflict(?: with .+)?
-Then (?:it|the request) fail(?:s|ed) because the (?:.+) (?:is|was|has) gone
-Then (?:it|the request) fail(?:s|ed) because the (?:.+) (?:is|was) not implemented
-
-Then the request is successful [200]
-Then the request was successful and a token was created [201]
-Then the request was successfully accepted [202]
-Then the request was successful and no body was returned [204]
-Then the request fails because it was invalid [400]
-Then the request fails because we are unauthorised [401]
-Then the request fails because it was forbidden [403]
-Then the request fails because it was not found [404]
-Then the request fails because it was not allowed [405]
-Then the request fails because there was a conflict [409]
-Then the request fails because the token was gone [410]
-Then the request fails because it was not implemented [501]
-```
-
-## Response handling
-
-The use of the environment variable: `root_key` will change the operation of this collection:
-
-**Not Set**
-```
-{"field":"value","field2":"value2"}
-[{"field":"value"},{"field":"value2"}]
-```
-
-**Set**
-```
-root_key=data
-{"data":{"field":"value","field2":"value2"}}
-{"data":[{"field":"value"},{"field":"value2"}]}
-```
-
-```gherkin
-Then the response has the following attributes:
-    | attribute | type   | value                            |
-    | Token     | String | e88f75e25307fa26ca699cb5c31bfb9f |
-    | Apid      | String | 1                                |
--> response = {"data":{"apid":"1","token":"e88f75e25307fa26ca699cb5c31bfb9f",...}}
-
-Then the response is a list containing two tokens
--> response = {"data":[{<token>},{<token>}]}
-
-Then one token has the following attributes:
-    | attribute | type   | value                            |
-    | Token     | String | e88f75e25307fa26ca699cb5c31bfb9f |
-    | Apid      | String | 1                                |
--> response = {"data":[{"apid":"1","token":"e88f75e25307fa26ca699cb5c31bfb9f",...}]}
-```
-
-### Attributes
+### Name conversion
 
 attributes are converted into singular parametrised versions of the provided name:
 
@@ -212,6 +132,7 @@ The conversion is based on the provided environment variables `field_camel` and 
 ```
 field_camel=false
 field_separator=_
+
 Apid -> apid
 Product Id -> product_id
 Bodies -> body
@@ -221,6 +142,7 @@ Bodies -> body
 ```
 field_camel=true
 field_separator=_
+
 Apid -> apid
 Product Id -> productId
 Bodies -> body
@@ -230,6 +152,7 @@ Bodies -> body
 ```
 field_camel=false
 field_separator=-
+
 Apid -> apid
 Product Id -> product-id
 Bodies -> body
