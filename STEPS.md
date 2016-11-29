@@ -9,7 +9,7 @@ The following is a list of steps, and their equivalent functional step
 ```
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
-Given I am a client                                 Given I send an accept JSON
+Given I am a client                                 Given I send and accept JSON
 ```
 
 ## Retrieval
@@ -81,7 +81,7 @@ Then the request was successful and no response     Then the response status sho
 
 Then the request failed because it was invalid      Then the response status should be "400"
 
-Then the request failed because i am unauthorised   Then the response status should be "401"
+Then the request failed because I am unauthorised   Then the response status should be "401"
 
 Then the request failed because it was forbidden    Then the response status should be "403"
 
@@ -125,7 +125,7 @@ Then two items have have the following attributes:  <N/A>
 <N/A>                                               Then the JSON response should follow "schema.json"
 ```
 
-### attribute saving and re-use
+### Attribute saving and re-use
 ```
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
