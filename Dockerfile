@@ -1,7 +1,7 @@
 FROM ruby
 
 MAINTAINER "Harry Bragg <harry.bragg@graze.com>"
-LABEL version="0.1" \
+LABEL version="0.2" \
       license="MIT"
 
 RUN gem install cucumber cucumber-api activesupport
