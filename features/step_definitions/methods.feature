@@ -86,6 +86,6 @@ Feature: Performing different rest methods
         And the response has the following attributes:
             | attribute | type    | value |
             | User Id   | numeric | 1     |
-            | Id        | numeric | 22    |
+            | Id        | string  | 22    |
             | Title     | string  | foo   |
             | Body      | string  | bar   |

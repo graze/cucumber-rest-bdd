@@ -1,11 +1,12 @@
 require 'cucumber-api/response'
 require 'cucumber-api/steps'
 
-Then(/^the response should have header "([^"]*)" with value "([^"]*)"$/) do |header, value|
+Then(/^the response (?:should have|has a|has the) header "([^"]*)" with (?:a |the )?value "([^"]*)"$/) do |header, value|
     p_value = resolve(value)
-    raise %/Required header: #{header} not found/ if !@response.raw_headers.key?(header)
-    actual = @response.raw_headers[header].first
-    raise %/Expect #{p_value} but was #{actual}/ if actual != p_value
+    p_header = header.parameterize
+    raise %/Required header: #{header} not found\n#{@response.raw_headers.inspect}/ if !@response.raw_headers.key?(p_header)
+    exists = @response.raw_headers[p_header].include? p_value
+    raise %/Expect #{p_value} in #{header} (#{p_header})\n#{@response.raw_headers.inspect}/ if !exists
 end
 
 Then(/^the JSON response should have "([^"]*)" of type array with (\d+) entr(?:y|ies)$/) do |json_path, number|
