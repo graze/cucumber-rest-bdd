@@ -13,8 +13,8 @@ The following environment variables modify how this will operate:
 - `endpoint` - (string) the base url to call for each request
 - `data_key` - (string) the root data key (if applicable) (for example: `"data"` if all responses have a `{"data":{}}` field)
 - `field_separator` - (string) the separator used between words by the api
-- `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields
-- `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default is not)
+- `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields (default: `false`)
+- `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default: `false`)
 
 ## Examples
 
@@ -153,7 +153,7 @@ The conversion is based on the provided environment variables `field_camel` and 
 field_camel=false
 field_separator=_
 
-Apid -> apid
+Someid -> someid
 Product Id -> product_id
 Bodies -> body
 ```
@@ -163,7 +163,7 @@ Bodies -> body
 field_camel=true
 field_separator=_
 
-Apid -> apid
+Someid -> someid
 Product Id -> productId
 Bodies -> body
 ```
@@ -173,7 +173,7 @@ Bodies -> body
 field_camel=false
 field_separator=-
 
-Apid -> apid
+Someid -> someid
 Product Id -> product-id
 Bodies -> body
 ```
