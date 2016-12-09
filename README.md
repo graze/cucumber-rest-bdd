@@ -89,6 +89,26 @@ And the response has the following attributes:
     | Body      | string  | repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt |
 ```
 
+### Multiple Requests
+
+```gherkin
+Given I am a client
+When I request to create a post with:
+    | attribute | type    | value |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+    | User Id   | numeric | 1     |
+Then the request is successful
+When I save "id"
+And I request the post "{id}"
+Then the request is successful
+And the response has the following attributes:
+    | attribute | type    | value |
+    | User Id   | numeric | 1     |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+```
+
 ## Resources
 
 A resource "name" is attempted to be retrieved from the given name of the item to be retrieved. This pluralises, ensures everything is lower case, removes any unparameterisable characters and uses a `-` separator.
