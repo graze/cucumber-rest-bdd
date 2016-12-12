@@ -19,7 +19,7 @@ The following environment variables modify how this will operate:
 ## Examples
 
 - For a full list of steps see: [STEPS](STEPS.md)
-- These examples are taken from [methods.feature](features/step_definitions/methods.feature)
+- These examples are taken from the test [features](features)
 
 ### Retrieve items
 
