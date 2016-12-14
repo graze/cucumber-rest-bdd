@@ -1,6 +1,13 @@
 # Cucumber Rest BDD
 
+[![Build Status](https://travis-ci.org/graze/cucumber-rest-bdd.svg?branch=master)](https://travis-ci.org/graze/cucumber-rest-bdd)
+[![](https://images.microbadger.com/badges/image/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/license/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own license badge on microbadger.com")
+
 A set of Behavioural tests that can be run against a REST API.
+
+![Giphy](https://media3.giphy.com/media/Tv7VPg6Os488g/giphy.gif)
 
 This is based from: http://gregbee.ch/blog/effective-api-testing-with-cucumber
 
