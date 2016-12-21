@@ -123,6 +123,9 @@ Then two items have have the following attributes:  <N/A>
     | Body      | string  | bar   |
 
 <N/A>                                               Then the JSON response should follow "schema.json"
+
+<N/A>                                               Then the response has the header "Content Type" with value
+                                                      "application/json"
 ```
 
 ### Attribute saving and re-use

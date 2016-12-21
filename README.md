@@ -56,6 +56,20 @@ And one response has the following attributes:
     | Body      | string  | delectus reiciendis molestiae occaecati non minima eveniet qui voluptatibus\\naccusamus in eum beatae sit\\nvel qui neque voluptates ut commodi qui incidunt\nut animi commodi |
 ```
 
+You can inspect child objects by using `:` in between the names
+```gherkin
+Given I am a client
+When I request the comment "1" with:
+    | `_expand` | post |
+Then the response has the following attributes:
+    | attribute    | type   | value |
+    | name         | string | id labore ex et quam laborum |
+    | email        | string | Eliseo@gardner.biz |
+    | body         | string | laudantium enim quasi est quidem magnam voluptate ipsam eos\\ntempora quo necessitatibus\\ndolor quam autem quasi\\nreiciendis et nam sapiente accusantium |
+    | post : title | string | sunt aut facere repellat provident occaecati excepturi optio reprehenderit |
+    | post : body  | string | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
+```
+
 ### Creation
 
 ```gherkin
@@ -134,6 +148,12 @@ If the environment variable: `resource_single` is set to `true` then it will not
 Token -> token
 User -> user
 ```
+
+You can directly pass what you want using:
+```
+`field`
+```
+this will not modify the field.
 
 ## Attributes
 
