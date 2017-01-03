@@ -31,7 +31,7 @@ Feature: Performing different rest methods
             | Body      | string  | est rerum tempore vitae\\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\\nqui aperiam non debitis possimus qui neque nisi nulla |
         And ten posts have the following attributes:
             | attribute | type    | value |
-            | User Id   | numeric | 1     |
+            | User Id   | numeric | 5     |
 
     Scenario: Retrieve multiple items with filter
         When I request a list of posts with:
