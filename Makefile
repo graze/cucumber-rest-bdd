@@ -6,7 +6,7 @@ build:
 
 test: start-test-server
 	docker-compose run --rm runner cucumber --order random
-	make stop-test-server
+	make stop-test-server > /dev/null 2>&1 &
 
 start-test-server: stop-test-server
 	docker-compose up -d test-server

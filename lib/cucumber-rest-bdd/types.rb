@@ -8,6 +8,8 @@ FEWER_MORE_THAN = Transform(/^(?:(?:fewer|less|more) than|at (?:least|most))$/) 
     to_compare(v)
 end
 
+HAVE_SYNONYM = %{(?:has|have|having|contain|contains|containing|with)}
+
 CMP_LESS_THAN = '<'
 CMP_MORE_THAN = '>'
 CMP_AT_LEAST = '>='

@@ -8,7 +8,7 @@ Then(/^the response is a list (?:of|containing) (#{FEWER_MORE_THAN})?\s*(#{CAPTU
     raise %/Expected at least #{count} items in array for path '#{get_root_json_path()}', found: #{list.count}\n#{@repsponse.to_json_s}/ if !num_compare(count_mod, list.count, count.to_i)
 end
 
-Then(/^the response ((?:(?:has|having|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)(?:with|has|have) (?:the )?(?:following )?(?:data )?attributes:$/) do |nesting, attributes|
+Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} (?:the )?(?:following )?(?:data )?attributes:$/) do |nesting, attributes|
     expected = get_attributes(attributes.hashes)
     groups = nesting
     grouping = get_grouping(groups)
@@ -20,7 +20,7 @@ Then(/^the response ((?:(?:has|having|contains|containing|with) (?:a|an|(?:(?:#{
     raise %/Could not find a match for: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
 end
 
-Then(/^the response ((?:(?:has|having|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |nesting|
+Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |nesting|
     groups = nesting
     grouping = get_grouping(groups)
     grouping.push({
@@ -31,7 +31,7 @@ Then(/^the response ((?:(?:has|having|contains|containing|with) (?:a|an|(?:(?:#{
     raise %/Could not find a match for: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:(?:has|having|contain|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)(?:has|have|with) (?:the )?(?:following )?(?:data )?attributes:$/) do |count_mod, count, nesting, attributes|
+Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} (?:the )?(?:following )?(?:data )?attributes:$/) do |count_mod, count, nesting, attributes|
     expected = get_attributes(attributes.hashes)
     groups = nesting
     grouping = get_grouping(groups)
@@ -45,7 +45,7 @@ Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:(?:has|having|co
     raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with attributes for: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:(?:has|have|having|contain|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |count_mod, count, nesting|
+Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |count_mod, count, nesting|
     groups = nesting
     grouping = get_grouping(groups)
     grouping.push({
@@ -58,7 +58,7 @@ Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:(?:has|have|havi
     raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
 end
 
-Then(/^the response ((?:(?:has|have|having|contains|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)(?:with|has|contain|contains) a list of (#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT} |\d+ )?(\w+)$/) do |nesting, num_mod, num, item|
+Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} a list of (#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT} |\d+ )?(\w+)$/) do |nesting, num_mod, num, item|
     groups = nesting
     list = {
         type: 'list',
@@ -78,7 +78,7 @@ Then(/^the response ((?:(?:has|have|having|contains|contains|containing|with) (?
     raise %/Could not find a match for #{nesting}#{compare_to_string(num_mod)}#{num} #{item}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:(?:has|having|contains|containing|with) (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)(?:with|has|have|contain|contains) a list of (#{FEWER_MORE_THAN})?\s*(?:(#{CAPTURE_INT}|\d+) )?(\w+)$/) do |count_mod, count, nesting, num_mod, num, item|
+Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} a list of (#{FEWER_MORE_THAN})?\s*(?:(#{CAPTURE_INT}|\d+) )?(\w+)$/) do |count_mod, count, nesting, num_mod, num, item|
     groups = nesting
     list = {
         type: 'list',
@@ -103,7 +103,7 @@ end
 # gets an array in the nesting format that nest_match understands to interrogate nested object and array data
 def get_grouping(nesting)
     grouping = []
-    while matches = /^(?:has|having|contains|containing|with) (?:a|an|(?:(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+))) (\w+)\s?+/.match(nesting)
+    while matches = /^#{HAVE_SYNONYM} (?:a|an|(?:(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+))) (\w+)\s?+/.match(nesting)
         nesting = nesting[matches[0].length, nesting.length]
         if matches[2].nil? then
             level = {
@@ -137,14 +137,14 @@ def nest_match(data, nesting, expected)
     level = local_nesting.pop
     case level[:type]
     when 'single' then
-        child_data = if level[:root] then data.dup else data[get_parameter(level[:key])] end
+        child_data = level[:root] ? data.dup : data[get_parameter(level[:key])]
         return nest_match(child_data, local_nesting, expected)
     when 'multiple' then
-        child_data = if level[:root] then data.dup else data[get_resource(level[:key])] end
+        child_data = level[:root] ? data.dup : data[get_resource(level[:key])]
         matched = child_data.select { |item| nest_match(item, local_nesting, expected) }
         return num_compare(level[:count_mod], matched.count, level[:count])
     when 'list' then
-        child_data = if level[:root] then data.dup else data[get_resource(level[:key])] end
+        child_data = level[:root] ? data.dup : data[get_resource(level[:key])]
         return false if !child_data.is_a?(Array)
         if level.has_key?(:count) then
             return num_compare(level[:count_mod], child_data.count, level[:count])
