@@ -114,9 +114,20 @@ Then the response has the following attributes:     Then the JSON response shoul
 Then the response is a list of 12 items             Then the JSON response should have "$." of type array with 12
                                                       entries
 
-Then the response is a list of at least 12 items    <N/A>
+Then the response is a list of at least 12 items    Then the JSON response should have "$." of type array with at
+                                                      least 12 entries
+Then the response is a list of at most 12 items     <N/A>
+Then the response is a list of fewer than 12 items  <N/A>
+Then the response is a list of more than 12 items   <N/A>
 
 Then two items have have the following attributes:  <N/A>
+    | attribute | type    | value |
+    | User Id   | integer | 12    |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+
+Then more than two items have have the following    <N/A>
+    attributes:
     | attribute | type    | value |
     | User Id   | integer | 12    |
     | Title     | string  | foo   |
@@ -129,9 +140,60 @@ Then two items have have the following attributes:  <N/A>
 ```
 
 ### Attribute saving and re-use
+
 ```
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I save "User Id" as "user"                     When I grab "$.userId" as "user"
 And I request the user "{user}"                     And I send a GET request to "http://url/users/{user}"
+```
+
+### Nested responses
+
+```
+Behavioural                                         Functional
+--------------------------------------------------- --------------------------------------------------------------
+Then the response has the following attributes:     Then the JSON response should have "userId" of type numeric
+    | attribute    | type    | value |                with value "12"
+    | User Id      | integer | 12    |              Then the JSON response should have "title" of type numeric
+    | Title        | string  | foo   |                with value "foo"
+    | Body         | string  | bar   |              Then the JSON response should have "body" of type numeric with
+    | Post : Title | string  | baz   |                value "bar"
+    | Post : Body  | string  | boo   |              Then the JSON response should have "post.title" of type string
+                                                      with value "baz"
+                                                    Then the JSON response should have "post.body" of type string
+                                                      with value "boo"
+
+Then the response has a list of comments            Then the JSON response should have "comments" of type array
+
+Then the response has a list of 2 comments          Then the JSON response should have "comments" of type array with
+                                                      2 entries
+Then the response has a list of at least            Then the JSON response should have "comments" of type array with
+  2 comments                                          at least 2 entries
+
+Then the response has a post with two comments      <N/A>
+  with attributes:
+    | attribute | type   | value |
+    | Title     | string | foo   |
+    | Body      | string | bar   |
+
+Then two items contains two posts with three        <N/A>
+  comments with an image with attributes:
+    | attribute | type   | value    |
+    | Href      | string | some_url |
+
+Then more than two items contains fewer than two    <N/A>
+  posts with at least three comments with an
+  image with attributes:
+    | attribute | type   | value    |
+    | Href      | string | some_url |
+
+Then the response has a post with a list of         Then the JSON response should have "post.comments" of type array
+  comments
+
+Then the response has a post with a list of more    Then the JSON response should have "post.comments" of type array
+  than 3 comments                                     with at least 4 comments
+
+Then more than three posts have less than two       <N/A>
+  comments
 ```

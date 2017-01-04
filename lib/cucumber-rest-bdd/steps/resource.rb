@@ -116,32 +116,6 @@ When(/^I request to modify the (.+?)(?: with (?:key|id))? "([^"]+)" with:$/) do 
     }
 end
 
-# response interrogation
-
-Then(/^the response has the following (?:data )?attributes:$/) do |table|
-    expected = get_attributes(table.hashes)
-    data = @response.get_as_type get_root_json_path(), 'object'
-    raise %/Expected output to contain the provided attributes\n#{@response.to_json_s}/ if !data.deep_include?(expected)
-end
-
-Then(/^the response is a list (?:of|containing) (#{CAPTURE_INT}|\d+) .*?$/) do |count|
-    steps %Q{
-        Then the JSON response should have "#{get_root_json_path()}" of type array with #{count} entries
-    }
-end
-
-Then(/^the response is a list (?:of|containing) (?:at least|more than) (#{CAPTURE_INT}|\d+) .*?$/) do |count|
-    list = @response.get_as_type get_root_json_path(), 'array'
-    raise %/Expected at least #{number} items in array for path '#{get_root_json_path()}', found: #{list.count}\n#{@repsponse.to_json_s}/ if list.count < count.to_i
-end
-
-Then(/(#{CAPTURE_INT}|\d+) (?:.*?) ha(?:s|ve) the following (?:data )?attributes:$/) do |count, params|
-  expected_item = get_attributes(params.hashes)
-  data = @response.get_as_type get_root_json_path(), 'array'
-  matched_items = data.select { |item| item.deep_include?(expected_item) }
-  raise %/Expected #{count} items in array with attributes, found: #{matched_items.count}\n#{@response.to_json_s}/ if matched_items.count != count
-end
-
 # value capture
 
 When(/^I save (?:attribute )?"([^"]+)"$/) do |attribute|

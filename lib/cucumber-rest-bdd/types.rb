@@ -1,7 +1,60 @@
 require 'active_support/inflector'
 
 CAPTURE_INT = Transform(/^(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)$/) do |v|
-  %w(zero one two three four five six seven eight nine ten).index(v)
+    %w(zero one two three four five six seven eight nine ten).index(v)
+end
+
+FEWER_MORE_THAN = Transform(/^(?:(?:fewer|less|more) than|at (?:least|most))$/) do |v|
+    to_compare(v)
+end
+
+CMP_LESS_THAN = '<'
+CMP_MORE_THAN = '>'
+CMP_AT_LEAST = '>='
+CMP_AT_MOST = '<='
+CMP_EQUALS = '='
+
+# take a number modifier string (fewer than, less than, etc) and return an operator '<', etc
+def to_compare(compare)
+    return case compare
+    when 'fewer than' then CMP_LESS_THAN
+    when 'less than' then CMP_LESS_THAN
+    when 'more than' then CMP_MORE_THAN
+    when 'at least' then CMP_AT_LEAST
+    when 'at most' then CMP_AT_MOST
+    else CMP_EQUALS
+    end
+end
+
+# turn a comparison into a string
+def compare_to_string(compare)
+    case compare
+    when CMP_LESS_THAN then 'fewer than '
+    when CMP_MORE_THAN then 'more than '
+    when CMP_AT_LEAST then 'at least '
+    when CMP_AT_MOST then 'at most '
+    when CMP_EQUALS then ''
+    else ''
+    end
+end
+
+# compare two numbers using the FEWER_MORE_THAN optional modifier
+def num_compare(type, left, right)
+    case type
+    when CMP_LESS_THAN then left < right
+    when CMP_MORE_THAN then left > right
+    when CMP_AT_MOST then left <= right
+    when CMP_AT_LEAST then left >= right
+    when CMP_EQUALS then left == right
+    else left == right
+    end
+end
+
+def to_num(num)
+    if /^(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)$/.match(num)
+        return %w(zero one two three four five six seven eight nine ten).index(num)
+    end
+    return num
 end
 
 module Boolean; end
@@ -20,6 +73,7 @@ class String
     elsif type == Enum then self.upcase.tr(" ", "_")
     elsif type == Float then self.to_f
     elsif type == Integer then self.to_i
+    elsif type == "Null" then nil
     else self
     end
   end
@@ -35,16 +89,7 @@ def get_root_json_path()
 end
 
 def get_json_path(names)
-    names = names.split(':').map do |n|
-        array = /^(.+) #(\d+)$/.match(n)
-        if !array.nil?
-            n = "#{get_parameter(array[0])}[#{array[1].to_i - 1}]"
-        else
-            n = get_parameter(n)
-        end
-        n
-    end
-    return "#{get_root_json_path()}#{names.join('.')}"
+    return "#{get_root_json_path()}#{get_parameters(names).join('.')}"
 end
 
 def get_parameters(names)

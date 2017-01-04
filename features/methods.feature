@@ -32,12 +32,16 @@ Feature: Performing different rest methods
         And ten posts have the following attributes:
             | attribute | type    | value |
             | User Id   | numeric | 5     |
+        And at most 20 posts have the following attributes:
+            | attribute | type    | value |
+            | User Id   | numeric | 5     |
 
     Scenario: Retrieve multiple items with filter
         When I request a list of posts with:
             | User Id | 2 |
         Then the request is successful
         And the response is a list of at least 2 posts
+        And the response is a list of fewer than 100 posts
         And one post has the following attributes:
             | attribute | type    | value |
             | User Id   | numeric | 2     |
@@ -50,6 +54,9 @@ Feature: Performing different rest methods
             | Id        | numeric | 12    |
             | Title     | string  | in quibusdam tempore odit est dolorem |
             | Body      | string  | itaque id aut magnam\\npraesentium quia et ea odit et ea voluptas et\\nsapiente quia nihil amet occaecati quia id voluptatem\\nincidunt ea est distinctio odio |
+        And more than two posts has the following attributes:
+            | attribute | type    | value |
+            | User Id   | numeric | 2     |
 
     Scenario: Create an item
         When I request to create a post with:

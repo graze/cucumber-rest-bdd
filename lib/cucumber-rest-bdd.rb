@@ -1,3 +1,1 @@
-require 'cucumber-rest-bdd/resource'
-require 'cucumber-rest-bdd/response'
-require 'cucumber-rest-bdd/status'
+require 'cucumber-rest-bdd/steps'

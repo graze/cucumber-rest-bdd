@@ -57,6 +57,7 @@ And one response has the following attributes:
 ```
 
 You can inspect child objects by using `:` in between the names
+
 ```gherkin
 Given I am a client
 When I request the comment "1" with:
@@ -68,6 +69,63 @@ Then the response has the following attributes:
     | body         | string | laudantium enim quasi est quidem magnam voluptate ipsam eos\\ntempora quo necessitatibus\\ndolor quam autem quasi\\nreiciendis et nam sapiente accusantium |
     | post : title | string | sunt aut facere repellat provident occaecati excepturi optio reprehenderit |
     | post : body  | string | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
+```
+
+Alternatively you can inspect child arrays and objects by describing the path of the object with attributes
+
+```gherkin
+Given I am a client
+When I set JSON request body to:
+    """
+    {"title":"test","body":"multiple",
+    "comments":[
+        {"common":1,"id":1,"title":"fish","body":"cake","image":{"href":"some_url"}},
+        {"common":1,"id":2,"title":"foo","body":"bar","image":{"href":"some_url"}}
+    ]}
+    """
+And I send a POST request to "http://test-server/posts"
+Then the response has the attributes:
+    | attribute | type   | value    |
+    | title     | string | test     |
+    | body      | string | multiple |
+And the response has a list of comments
+And the response has a list of 2 comments
+And the response has two comments with attributes:
+    | attribute | type    | value |
+    | common    | integer | 1     |
+And the response has two comments with an image with attributes:
+    | attribute | type    | value    |
+    | href      | string  | some_url |
+And the response has one comment with attributes:
+    | attribute | type    | value |
+    | Id        | integer | 1     |
+    | Title     | string  | fish  |
+    | Body      | string  | cake  |
+And the response has one comment with attributes:
+    | attribute | type    | value |
+    | Id        | integer | 2     |
+    | Title     | string  | foo   |
+    | Body      | string  | bar   |
+```
+
+Each numeric request can be prefixed with a modifier to modify the number specified
+
+```gherkin
+Given I am a client
+When I request a list of posts with:
+    | `_embed` | comments |
+Then the response is a list of posts
+Then the response is a list of more than 5 posts
+Then the response is a list of at least 10 posts
+Then more than three posts have the attributes:
+    | attribute | type    | value |
+    | User Id   | integer | 5     |
+Then less than 200 posts have more than four comments
+Then more than 50 posts have less than six comments
+Then more than 80 posts have a list of comments
+Then at least 90 posts have a list of five comments
+Then more than 10 posts have five comments
+Then less than 200 posts have five comments
 ```
 
 ### Creation
