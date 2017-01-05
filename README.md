@@ -220,13 +220,15 @@ this will not modify the field.
 Attribute types:
 The following types are supported:
 
-| type    | common name | example   |
-|---------|-------------|-----------|
-| numeric | integer     | 12        |
-| integer | integer     | 05        |
-| string  | string      | "text"    |
-| array   | array       | ["a"]     |
-| object  | object      | {"a":"b"} |
+| type    | other names           | example   |
+|---------|-----------------------|-----------|
+| integer | numeric, number, long | 12        |
+| float   | double, decimal       | 4.8       |
+| string  | text                  | "text"    |
+| array   | array                 | ["a"]     |
+| object  | object                | {"a":"b"} |
+| null    | nil                   |           |
+| bool    | boolean               | true      |
 
 ### Name conversion
 

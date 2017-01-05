@@ -69,16 +69,32 @@ class String; include Enum; end
 class String
   def to_type(type)
     # cannot use 'case type' which checks for instances of a type rather than type equality
-    if type == Boolean then self =~ /true/i
-    elsif type == Date then Date.parse(self)
-    elsif type == DateTime then DateTime.parse(self)
+    if type == Boolean then !(self =~ /true|yes/i).nil?
     elsif type == Enum then self.upcase.tr(" ", "_")
     elsif type == Float then self.to_f
     elsif type == Integer then self.to_i
-    elsif type == "Null" then nil
+    elsif type == NilClass then nil
     else self
     end
   end
+end
+
+def parse_type(type)
+    replacements = {
+        /^numeric$/i => 'integer',
+        /^int$/i => 'integer',
+        /^long$/i => 'integer',
+        /^number$/i => 'integer',
+        /^decimal$/i => 'float',
+        /^double$/i => 'float',
+        /^bool$/i => 'boolean',
+        /^null$/i => 'nil_class',
+        /^nil$/i => 'nil_class',
+        /^text$/i => 'string'
+    }
+    type.tr(' ', '_')
+    replacements.each { |k,v| type.gsub!(k, v) }
+    type
 end
 
 def get_resource(name)
@@ -114,7 +130,7 @@ def get_attributes(hashes)
       name, value, type = row["attribute"], row["value"], row["type"]
       value = resolve(value)
       value.gsub!(/\\n/, "\n")
-      type.gsub!(/numeric/, 'integer')
+      type = parse_type(type)
       names = get_parameters(name)
       new_hash = names.reverse.inject(value.to_type(type.camelize.constantize)) { |a, n| { n => a } }
       hash.deep_merge!(new_hash)

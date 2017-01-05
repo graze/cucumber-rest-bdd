@@ -18,3 +18,8 @@ Then(/^the JSON response should have "([^"]*)" of type (.+) that matches "(.+)"$
     value = @response.get_as_type json_path, type
     raise %/Expected #{json_path} value '#{value}' to match regex: #{regex}\n#{@response.to_json_s}/ if (Regexp.new(regex) =~ value).nil?
 end
+
+Then(/^the JSON response should have "([^"]*)" of type (?:nill|null|nil)$/) do |json_path|
+    value = @response.get_as_type_or_null json_path, 'string'
+    raise %/Expected #{json_path} to be nil, was: #{value.class}\n#{@response.to_json_s}/ if !value.nil?
+end
