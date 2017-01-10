@@ -7,9 +7,7 @@ services:
 
     runner:
         image: graze/cucumber-rest-bdd
-        build:
-            context: .
-            dockerfile: Dockerfile.dev
+        build: .
         volumes:
             - .:/opt/src
         working_dir: /opt/src
