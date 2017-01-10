@@ -1,10 +1,10 @@
 FROM ruby
 
 MAINTAINER "Harry Bragg <harry.bragg@graze.com>"
-LABEL version="0.3.5" \
+LABEL version="0.3.6" \
       license="MIT"
 
-RUN gem install cucumber-rest-bdd
+RUN gem install --version '>= 0.3.6' cucumber-rest-bdd
 
 WORKDIR /opt/src
 
