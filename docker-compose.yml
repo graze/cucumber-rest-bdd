@@ -13,7 +13,7 @@ services:
         working_dir: /opt/src
         environment:
             - endpoint=http://test-server/
-            - cucumber_api_verbose=true
+            - cucumber_api_verbose=false
             - field_separator=_
             - field_camel=true
             - resource_single=false
