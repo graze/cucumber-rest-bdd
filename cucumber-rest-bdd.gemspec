@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name          = 'cucumber-rest-bdd'
-    s.version       = '0.3.2'
+    s.version       = '0.3.4'
     s.platform      = Gem::Platform::RUBY
     s.date          = '2016-11-18'
     s.summary       = 'BDD Rest API specifics for cucumber'
