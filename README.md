@@ -13,6 +13,21 @@ This is based from: http://gregbee.ch/blog/effective-api-testing-with-cucumber
 
 A list of [Steps](STEPS.md) shows the comparison between Behavioural and Functional tests provided by this package.
 
+## Usage
+
+You can include this as a gem in your features, or run directly through docker
+
+**Gem:**
+
+```bash
+$ gem install cucumber-rest-bdd
+```
+
+**Docker:**
+```bash
+$ docker run --rm -v $(pwd):/opt/src -e endpoint=http://server/ graze/cucumber-rest-bdd
+```
+
 ## Configuration
 
 The following environment variables modify how this will operate:
