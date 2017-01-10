@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency('easy_diff', '~> 1.0')
 
   # prereleases from Travis CI
-  if ENV['CI'] and !ENV['TRAVIS_TAG']
+  if ENV['CI'] && ENV['TRAVIS_TAG'] == ''
     s.version = s.version + "-alpha-#{ENV['TRAVIS_JOB_NUMBER']}"
   end
 end
