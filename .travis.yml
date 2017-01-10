@@ -1,12 +1,14 @@
 language: shell
-
 sudo: required
-
 services:
-  - docker
-
+- docker
 install:
-  - make build
-
+- make build
 script:
-  - make test
+- make test
+deploy:
+  provider: rubygems
+  api_key:
+    secure: C6tLZdH9+lhJOFM+Ygen1h5dBzfJU5NJhT8F1WrE0Y48ANriUcLE2p0jokm1rvLOb7o2cQmYJLTXVVMzvBeFsq+Px5f1m7k7RegmqaapB9xxd/m3bJzVGRbKyR7luLMdHwmaCHum44/Q302jwM4haI3dQRmu4bX84WXmqLSPCv1VLFbqMYVpnijpHgsUEGQsVHM4YhKqjCx9MikwFa/S4rAgez/WjLUaBRTU+8/TfTUyF0LrdbsXttTn30ijrg0U68llipCq6JI7yGjEYxMHUOCwXX7ihRw996pqRTK2VYoEwnwmLUu03Y3YmYPyAx7GpsDZsdY7AOEOfg2CNaGRK0SmEh16GvLvi7dscQqqx6xajvu29QXxo+oH21ir3MgTMAAMqOfRvPqwsd5WqGwMsh4ER4qe9BGZPt1N3aFV9HrGwLR9c2NJLoWxBZulJZzJre8JremJZZCXI8YR0HI7uWMj2orTyM33viGRddlIT2URTPL37QAJi9/FUXw/48WrxEiqMEzkrd5UDTm9OB+Dbo9QoyYmHRc67NemfCBkqUwVWN2jkr+/AzMDDn0tnoy75BVMG2mzsiuSrmJyv3ZlVDEUKyZErEU+xyyOFvWwDTKFMah7VRUayPOHYffUaX80XdZlUBJGs/v+SyJPbknoxMPYpIOeu6dk2kcMlb1atxA=
+  on:
+    tags: true
