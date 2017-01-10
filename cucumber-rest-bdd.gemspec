@@ -1,6 +1,7 @@
 Gem::Specification.new do |s|
   s.name          = 'cucumber-rest-bdd'
   s.version       = '0.3.4'
+  s.version       = "#{s.version}-alpha-#{ENV['TRAVIS_BUILD_NUMBER']}" if ENV['TRAVIS'] && ENV['TRAVIS_TAG'] == ''
   s.platform      = Gem::Platform::RUBY
   s.date          = '2017-01-10'
   s.summary       = 'BDD Rest API specifics for cucumber'
@@ -15,9 +16,4 @@ Gem::Specification.new do |s|
   s.add_dependency('cucumber-api', '~> 0.4')
   s.add_dependency('activesupport', '~> 5.0')
   s.add_dependency('easy_diff', '~> 1.0')
-
-  # prereleases from Travis CI
-  if ENV['CI'] && ENV['TRAVIS_TAG'] == ''
-    s.version = s.version + "-alpha-#{ENV['TRAVIS_JOB_NUMBER']}"
-  end
 end
