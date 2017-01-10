@@ -4,8 +4,6 @@ MAINTAINER "Harry Bragg <harry.bragg@graze.com>"
 LABEL version="0.3.4" \
       license="MIT"
 
-RUN gem install cucumber cucumber-api activesupport
-
 COPY . /usr/local/cucumber-rest-bdd
 WORKDIR /usr/local/cucumber-rest-bdd
 
