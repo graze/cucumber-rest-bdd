@@ -86,12 +86,12 @@ Then the request failed because I am unauthorised   Then the response status sho
 Then the request failed because it was forbidden    Then the response status should be "403"
 
 Then the request failed because the item was not    Then the response status should be "404"
-  found  
+  found
 
 Then the request failed because it was not allowed  Then the response status should be "405"
 
 Then the request failed because there was a         Then the response status should be "409"
-  conflict    
+  conflict
 
 Then the request failed because the item has gone   Then the response status should be "410"
 
@@ -127,7 +127,7 @@ Then two items have have the following attributes:  <N/A>
     | Body      | string  | bar   |
 
 Then more than two items have have the following    <N/A>
-    attributes:
+  attributes:
     | attribute | type    | value |
     | User Id   | integer | 12    |
     | Title     | string  | foo   |
@@ -146,6 +146,33 @@ Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I save "User Id" as "user"                     When I grab "$.userId" as "user"
 And I request the user "{user}"                     And I send a GET request to "http://url/users/{user}"
+```
+
+### Nested requests
+
+```
+Behavioural                                         Functional
+--------------------------------------------------- --------------------------------------------------------------
+When I request a list of comments for post "1"      When I send a GET request to "http://url/posts/1/comments"
+
+When I request the comment "2" for post "3"         When I send a GET request to "http://url/posts/2/comments/3"
+
+When I request the photo "3" in album "4" for user  When I send a GET request to
+  "5"                                                 "http://url/users/5/albums/4/photos/3"
+
+When I request a list of photos in album "6" for    When I send a GET request to
+  user "7"                                            "http://url/users/7/albums/6/photos"
+
+When I request to create a comment for post "8"     When I send a POST request to "http://url/posts/8/comments"
+
+When I request to modify the comment "9" for post   When I send a PATCH request to
+  "10"                                                "http://url/posts/10/comments/9"
+
+When I request to set photo "11" in album "12" to:  When I set JSON request body to:
+    | attribute | type   | value                |       """
+    | url       | string | http://url/image.jpg |       {"url":"http://url/image.jpg"}
+                                                        """
+                                                    And I send a PUT request to "http://url/albums/12/photos/11"
 ```
 
 ### Nested responses

@@ -2,8 +2,9 @@ version: '2'
 services:
     test-server:
         image: clue/json-server
+        command: --routes /data/routes.json
         volumes:
-            - ./server/db.json:/data/db.json:ro
+            - ./server:/data:ro
 
     runner:
         image: graze/cucumber-rest-bdd
@@ -18,3 +19,4 @@ services:
             - field_camel=true
             - resource_single=false
             - data_key=
+            - set_parent_id=true

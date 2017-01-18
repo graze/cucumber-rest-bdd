@@ -1,0 +1,5 @@
+{
+  "/:r1/:id1/:r2/:id2": "/:r2/:id2",
+  "/users/:uid/albums/:alid/photos": "/photos?albumId=:alid",
+  "/users/:uid/albums/:alid/photos/:pid": "/photos/:pid"
+}

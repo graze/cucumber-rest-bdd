@@ -17,7 +17,7 @@ Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{C
         type: 'single'
     })
     data = @response.get get_root_json_path()
-    raise %/Could not find a match for: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
+    raise %/Could not find a match for: #{nesting}\n#{expected.inspect}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
 end
 
 Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |nesting|
@@ -42,7 +42,7 @@ Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} 
         count_mod: count_mod
     })
     data = @response.get get_root_json_path()
-    raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with attributes for: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
+    raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with attributes for: #{nesting}\n#{expected.inspect}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
 end
 
 Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |count_mod, count, nesting|

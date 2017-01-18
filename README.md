@@ -4,6 +4,7 @@
 [![](https://images.microbadger.com/badges/image/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own version badge on microbadger.com")
 [![](https://images.microbadger.com/badges/license/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own license badge on microbadger.com")
+[![Gem Version](https://badge.fury.io/rb/cucumber-rest-bdd.svg)](https://badge.fury.io/rb/cucumber-rest-bdd)
 
 A set of Behavioural tests that can be run against a REST API.
 
@@ -37,6 +38,7 @@ The following environment variables modify how this will operate:
 - `field_separator` - (string) the separator used between words by the api
 - `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields (default: `false`)
 - `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default: `false`)
+- `set_parent_id` - (bool [`true`|`false`]) when creating sub resources, automatically add parent ids
 
 ## Examples
 
@@ -55,6 +57,15 @@ And the response has the following attributes:
     | Id        | numeric | 1     |
     | Title     | string  | sunt aut facere repellat provident occaecati excepturi optio reprehenderit |
     | Body      | string  | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
+```
+
+```gherkin
+Given I am a client
+When I request the photo "1" for album "1" for user "1"
+Then the request was successful
+And the response has the attributes:
+    | attribute | type   | value                                              |
+    | title     | string | accusamus beatae ad facilis cum similique qui sunt |
 ```
 
 ```gherkin
@@ -158,6 +169,25 @@ And the response has the following attributes:
     | User Id   | numeric | 1     |
     | Title     | string  | foo   |
     | Body      | string  | bar   |
+```
+
+If the environment variable: `set_parent_id` is set to `true` then when you create sub resources it will add the level aboves id into the json, otherwise it will rely on the api to do it for you
+
+```gherkin
+Given I am a client
+When I request to create a photo in album "2" for user "1" with:
+    | attribute | type   | value |
+    | title     | string | foo   |
+Then the comment was created
+And the response has the attributes:
+    | attribute | type   | value |
+    | Album Id  | int    | 2     |
+    | Title     | string | foo   |
+When I request a list of photos for album "2" for user "1"
+Then the request was successful
+And one comment has the attributes:
+    | attribute | type   | value |
+    | Title     | string | foo   |
 ```
 
 ### Removal

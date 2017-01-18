@@ -1,6 +1,8 @@
 FROM ruby
 
 MAINTAINER "Harry Bragg <harry.bragg@graze.com>"
+LABEL version="0.4.0" \
+      license="MIT"
 
 COPY . /usr/local/cucumber-rest-bdd
 WORKDIR /usr/local/cucumber-rest-bdd
@@ -16,5 +18,6 @@ ENV field_camel=false
 ENV resource_single=false
 ENV cucumber_api_verbose=false
 ENV data_key=
+ENV set_parent_id=false
 
 CMD ["cucumber"]

@@ -13,6 +13,10 @@ Then(/^(?:it|the request) fail(?:s|ed)$/) do
     raise %/Expected failed response code 4xx\/5xx but was #{@response.code}/ if @response.code < 400 || @response.code >= 600
 end
 
+Then(/^the (?!request)(?:.+?) (?:is|was) created$/) do
+    steps %Q{Then the response status should be "201"}
+end
+
 Then(/^the request (?:is|was) successful and (?:a resource|.+) (?:is|was) created$/) do
     steps %Q{Then the response status should be "201"}
 end
