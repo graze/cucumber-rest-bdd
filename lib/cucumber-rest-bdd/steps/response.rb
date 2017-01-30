@@ -5,7 +5,7 @@ require 'cucumber-rest-bdd/types'
 
 Then(/^the response is a list (?:of|containing) (#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) .*?$/) do |count_mod, count|
     list = @response.get_as_type get_root_json_path(), 'array'
-    raise %/Expected at least #{count} items in array for path '#{get_root_json_path()}', found: #{list.count}\n#{@repsponse.to_json_s}/ if !num_compare(count_mod, list.count, count.to_i)
+    raise %/Expected at least #{count} items in array for path '#{get_root_json_path()}', found: #{list.count}\n#{@response.to_json_s}/ if !num_compare(count_mod, list.count, count.to_i)
 end
 
 Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} (?:the )?(?:following )?(?:data )?attributes:$/) do |nesting, attributes|
