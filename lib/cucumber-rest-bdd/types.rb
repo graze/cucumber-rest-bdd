@@ -56,7 +56,7 @@ def to_num(num)
     if /^(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)$/.match(num)
         return %w(zero one two three four five six seven eight nine ten).index(num)
     end
-    return num
+    return num.to_i
 end
 
 module Boolean; end

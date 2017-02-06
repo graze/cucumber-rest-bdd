@@ -49,7 +49,7 @@ Feature: Dealing with sub objects
             | attribute         | type   | value |
             | title             | string | sunt aut facere repellat provident occaecati excepturi optio reprehenderit |
             | body              | string | quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto |
-        And the response has one comment with attributes:
+        And the response has 1 comment with attributes:
             | attribute | type   | value |
             | name      | string | id labore ex et quam laborum |
             | email     | string | Eliseo@gardner.biz |
