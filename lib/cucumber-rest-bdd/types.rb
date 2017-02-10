@@ -103,7 +103,7 @@ def get_resource(name)
 end
 
 def get_root_json_path()
-    key = ENV.has_key?('data_key') && !ENV['data_key'].empty? ? %/$.#{ENV['data_key']}./ : "$."
+    return ENV.has_key?('data_key') && !ENV['data_key'].empty? ? "$.#{ENV['data_key']}." : "$."
 end
 
 def get_json_path(names)

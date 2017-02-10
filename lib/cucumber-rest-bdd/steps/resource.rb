@@ -91,7 +91,7 @@ end
 
 # PUT
 
-When(/^I request to (?:create|replace) (?:an?|the) ((?![^"]+?(?: for | in | on ))[^"]+?)(?: with (?:key|id))? "([^"]+)"(#{LEVELS})?$/) do |resource, id, levels|
+When(/^I request to (?:create|replace|set) (?:an?|the) ((?![^"]+?(?: for | in | on ))[^"]+?)(?: with (?:key|id))? "([^"]+)"(#{LEVELS})?$/) do |resource, id, levels|
     resource_name = get_resource(resource)
     level = Level.new(levels)
     if ENV['set_parent_id'] == 'true'
@@ -144,7 +144,7 @@ end
 # value capture
 
 When(/^I save (?:attribute )?"([^"]+)"$/) do |attribute|
-    steps %Q{When I grab "#{get_json_path(attribute)}"}
+    steps %Q{When I grab "#{get_json_path(attribute)}" as "#{attribute}"}
 end
 
 When(/^I save (?:attribute )?"([^"]+)" to "([^"]+)"$/) do |attribute, ref|
