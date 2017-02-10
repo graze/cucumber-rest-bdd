@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'cucumber-rest-bdd'
-  s.version       = '0.4.2'
+  s.version       = '0.4.3'
   s.version       = "#{s.version}-#{ENV['TRAVIS_BUILD_NUMBER']}" if ENV['TRAVIS'] && ENV['TRAVIS_TAG'] == ''
   s.platform      = Gem::Platform::RUBY
   s.date          = '2017-01-10'
