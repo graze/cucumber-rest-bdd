@@ -14,6 +14,12 @@ Then(/^the JSON response should have "([^"]*)" of type array with (\d+) entr(?:y
   raise %/Expected #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@response.to_json_s}/ if list.count != number.to_i
 end
 
+Then(/^the JSON response should have "([^"]*)" of type array with at (least|most) (\d+) entr(?:y|ies)$/) do |json_path, comparator, number|
+  list = @response.get_as_type json_path, 'array'
+  raise %/Expected at #{comparator} #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@response.to_json_s}/ \
+	if (comparator == "least" && list.count < number.to_i) || (comparator == "most" && list.count > number.to_i)
+end
+
 Then(/^the JSON response should have "([^"]*)" of type (.+) that matches "(.+)"$/) do |json_path, type, regex|
     value = @response.get_as_type json_path, type
     raise %/Expected #{json_path} value '#{value}' to match regex: #{regex}\n#{@response.to_json_s}/ if (Regexp.new(regex) =~ value).nil?

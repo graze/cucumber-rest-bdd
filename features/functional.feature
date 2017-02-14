@@ -7,7 +7,11 @@ Feature: Performing different rest methods
         When I request a list of posts with:
             | User Id | 8 |
         Then the request is successful
+        And the JSON response should have "$." of type array with at least 1 entry
+        And the JSON response should have "$." of type array with at least 10 entries
         And the JSON response should have "$." of type array with 10 entries
+        And the JSON response should have "$." of type array with at most 10 entries
+        And the JSON response should have "$." of type array with at most 11 entries
 
     Scenario: Check for null type
         When I request to create a post with:
