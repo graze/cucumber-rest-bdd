@@ -1,5 +1,6 @@
 require 'cucumber-api/response'
 require 'cucumber-api/steps'
+require 'cucumber-rest-bdd/types'
 
 Then(/^the response (?:should have|has a|has the) header "([^"]*)" with (?:a |the )?value "([^"]*)"$/) do |header, value|
     p_value = resolve(value)
@@ -12,6 +13,12 @@ end
 Then(/^the JSON response should have "([^"]*)" of type array with (\d+) entr(?:y|ies)$/) do |json_path, number|
   list = @response.get_as_type json_path, 'array'
   raise %/Expected #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@response.to_json_s}/ if list.count != number.to_i
+end
+
+Then(/^the JSON response should have "([^"]*)" of type array with (#{FEWER_MORE_THAN}) (\d+) entr(?:y|ies)$/) do |json_path, count_mod, number|
+  list = @response.get_as_type json_path, 'array'
+  raise %/Expected #{count_mod} #{number} items in array for path '#{json_path}', found: #{list.count}\n#{@response.to_json_s}/ \
+	if !num_compare(count_mod, list.count, number.to_i)
 end
 
 Then(/^the JSON response should have "([^"]*)" of type (.+) that matches "(.+)"$/) do |json_path, type, regex|
