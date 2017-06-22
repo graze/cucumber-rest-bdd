@@ -5,7 +5,7 @@ build:
 	docker-compose build runner
 
 test: start-test-server
-	docker-compose run --rm runner cucumber --order random
+	docker-compose run --rm runner cucumber --order random --format progress
 	make stop-test-server > /dev/null 2>&1 &
 
 start-test-server: stop-test-server

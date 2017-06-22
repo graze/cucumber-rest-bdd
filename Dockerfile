@@ -18,6 +18,7 @@ ENV field_camel=false
 ENV resource_single=false
 ENV cucumber_api_verbose=false
 ENV data_key=
+ENV error_key=error
 ENV set_parent_id=false
 
 CMD ["cucumber"]

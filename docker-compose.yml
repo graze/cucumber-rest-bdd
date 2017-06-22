@@ -2,7 +2,7 @@ version: '2'
 services:
     test-server:
         image: clue/json-server
-        command: --routes /data/routes.json
+        command: --routes /data/routes.json --middlewares /data/error.js
         volumes:
             - ./server:/data:ro
 
@@ -19,4 +19,5 @@ services:
             - field_camel=true
             - resource_single=false
             - data_key=
+            - error_key=error
             - set_parent_id=true

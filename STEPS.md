@@ -139,6 +139,37 @@ Then more than two items have have the following    <N/A>
                                                       "application/json"
 ```
 
+### Error Handling
+
+Using the environment variable: `error_key` to represent the error resource
+
+```
+Behavioural                                         Functional
+--------------------------------------------------- --------------------------------------------------------------
+Then the response has one error:                    Then the JSON response should have "errors[0].code" of type
+    | attribute | type   | value   |                  string with value "ERR-BLA"
+    | code      | string | ERR-BLA |
+
+Then the response has one error with attributes:    Then the JSON response should have "errors[0].code" of type
+    | attribute | type   | value   |                  string with value "ERR-BLA"
+    | code      | string | ERR-BLA |
+
+Then the response has at least one error           Then the JSON response should have "errors" of type array
+                                                     with at least 1 entry
+
+Then the response has an error                      Then the JSON response should have required key "error" of
+Then the response contains an error                   type object
+
+Then the response has two errors with:
+    | attribute | type   | value       |
+    | message   | string | super error |
+
+Then the response has three errors with two links   <N/A>
+  with:
+    | attribute | type   | value       |
+    | href      | string | http://oops |
+```
+
 ### Attribute saving and re-use
 
 ```
@@ -155,7 +186,7 @@ Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I request a list of comments for post "1"      When I send a GET request to "http://url/posts/1/comments"
 
-When I request the comment "2" for post "3"         When I send a GET request to "http://url/posts/2/comments/3"
+When I request the comment "2" for post "3"         When I send a GET request to "http://url/posts/3/comments/2"
 
 When I request the photo "3" in album "4" for user  When I send a GET request to
   "5"                                                 "http://url/users/5/albums/4/photos/3"

@@ -102,12 +102,16 @@ def get_resource(name)
     resource = (ENV.has_key?('resource_single') && ENV['resource_single'] == 'true') ? resource.singularize : resource.pluralize
 end
 
-def get_root_json_path()
+def get_root_data_key()
     return ENV.has_key?('data_key') && !ENV['data_key'].empty? ? "$.#{ENV['data_key']}." : "$."
 end
 
+def get_root_error_key()
+    return "$."
+end
+
 def get_json_path(names)
-    return "#{get_root_json_path()}#{get_parameters(names).join('.')}"
+    return "#{get_root_data_key()}#{get_parameters(names).join('.')}"
 end
 
 def get_parameters(names)
@@ -119,7 +123,7 @@ def get_parameter(name)
         name = name[1..-2]
     else
         separator = ENV.has_key?('field_separator') ? ENV['field_separator'] : '_'
-        name = name.parameterize(separator: separator)
+        name = name.singularize.parameterize(separator: separator)
         name = name.camelize(:lower) if (ENV.has_key?('field_camel') && ENV['field_camel'] == 'true')
     end
     name

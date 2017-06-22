@@ -154,6 +154,31 @@ Then more than 10 posts have five comments
 Then less than 200 posts have five comments
 ```
 
+#### Errors
+
+If the `error_key` environment variable is set, if that key is used as the initial step it will ignore any `data_key`
+setting.
+
+Example: `error_key=error`, `data_key=data`
+
+```gherkin
+Then the response has a list of posts       | {"data":[{"id": 12}]}
+
+Then the response has one error             | {"errors":[{"message": "Error"}]}
+
+Then the response has an error              | {"error": {"message": "Error}}
+```
+
+Example: `error_key=`, `data_key=data`
+
+```gherkin
+Then the response has a list of posts       | {"data":[{"id": 12}]}
+
+Then the response has one error             | {"data": {"errors":[{"message": "Error"}]}}
+
+Then the response has an error              | {"data": {"error": {"message": "Error}}}
+```
+
 ### Creation
 
 ```gherkin
