@@ -1,3 +1,4 @@
+@errors
 Feature: Handling error responses
 
     Background:
