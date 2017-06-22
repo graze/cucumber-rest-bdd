@@ -1,7 +1,7 @@
 FROM ruby
 
 MAINTAINER "Harry Bragg <harry.bragg@graze.com>"
-LABEL version="0.4.4" \
+LABEL version="0.5.1" \
       license="MIT"
 
 COPY . /usr/local/cucumber-rest-bdd
