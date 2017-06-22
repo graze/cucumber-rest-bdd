@@ -102,7 +102,7 @@ end
 
 # gets the relevant key for the response based on the first key element
 def get_key(grouping)
-    if ENV['error_key'] && !ENV['error_key'].empty? && grouping.count > 1 && grouping[-2][:key] == ENV['error_key'] then
+    if ENV['error_key'] && !ENV['error_key'].empty? && grouping.count > 1 && grouping[-2][:key].singularize == ['error_key'] then
         get_root_error_key()
     else
         get_root_data_key()
