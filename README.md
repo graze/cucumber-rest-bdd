@@ -35,6 +35,7 @@ The following environment variables modify how this will operate:
 
 - `endpoint` - (string) the base url to call for each request
 - `data_key` - (string) the root data key (if applicable) (for example: `"data"` if all responses have a `{"data":{}}` field)
+- `error_key` - (string) this will ignore the `data_key` when checking for errors
 - `field_separator` - (string) the separator used between words by the api
 - `field_camel` - (bool [`true`|`false`]) does this endpoint use camelCase for fields (default: `false`)
 - `resource_single` - (bool [`true`|`false`]) if each resource should be singularized or not (default: `false`)
