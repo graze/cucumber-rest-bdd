@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'http://github.com/graze/cucumber-rest-bdd'
   s.license       = 'MIT'
 
-  s.add_dependency('cucumber-api', '~> 0.4')
+  s.add_dependency('cucumber-api', '= 0.4')
   s.add_dependency('activesupport', '~> 5.0')
   s.add_dependency('easy_diff', '~> 1.0')
 end
