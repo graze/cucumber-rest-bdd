@@ -1,7 +1,12 @@
 require 'cucumber-rest-bdd/types'
 require 'active_support/inflector'
 
-LEVELS = %{(?: (?:for|in|on) [^"]+?(?: with (?:key|id))? "[^"]+")*}%
+ParameterType(
+    name: 'levels',
+    regexp: /((?: (?:for|in|on) (?:#{RESOURCE_NAME_SYNONYM})(?: with (?:key|id))? "[^"]*")*)/,
+    transformer: -> (levels) { Level.new(levels) },
+    use_for_snippets: false
+)
 
 class Level
     @urls = []
@@ -26,14 +31,14 @@ class Level
 
     def hash
         hash = {}
-        @urls.each{ |l| hash[get_parameter("#{get_parameter(l[:resource]).singularize}_id")] = l[:id] }
+        @urls.each{ |l| hash[get_field("#{get_field(l[:resource]).singularize}_id")] = l[:id] }
         hash
     end
 
     def last_hash
         last = @urls.last
         if !last.nil?
-            key = get_parameter("#{get_parameter(last[:resource]).singularize}_id")
+            key = get_field("#{get_field(last[:resource]).singularize}_id")
             return {
                 key => last[:id]
             }

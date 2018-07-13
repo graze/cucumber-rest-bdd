@@ -1,170 +1,145 @@
 require 'cucumber-rest-bdd/steps/resource'
 require 'cucumber-rest-bdd/types'
+require 'cucumber-rest-bdd/list'
+require 'cucumber-rest-bdd/data'
 
-Then(/^print the response$/) do
+ParameterType(
+    name: 'item_name',
+    regexp: /([\w\s]+?)/,
+    transformer: -> (s) { s },
+    use_for_snippets: false
+)
+
+Then("print the response") do
     puts %/The response:\n#{@response.to_json_s}/
 end
 
-# response interrogation
+# SIMPLE VALUE RESPONSE
 
-Then(/^the response is a list (?:of|containing) (#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) .*?$/) do |count_mod, count|
+# response is a string with the specified value
+Then("the response #{HAVE_ALTERNATION} (the )(following )value {string}") do |value|
+    expected = value
+    data = @response.get get_root_data_key()
+    raise %/Response did not match: #{expected}\n#{data}/ if data.empty? || !data.include?(expected)
+end
+
+# OBJECT RESPONSE
+
+# response is an object with a field that is validated by a pre-defined regex
+Then("the response #{HAVE_ALTERNATION} {field_name} of type {word}") do |field, type|
+    regex = case type
+        when 'datetime' then /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:[+|-]\d{2}:\d{2})?$/i
+        when 'guid' then /^[{(]?[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$/i
+        else nil
+    end
+
+    type = 'string' if regex.nil?
+    value = field.get_value(@response, type)
+    field.validate_value(@response, value.to_s, Regexp.new(regex))
+end
+
+# response is an object with a field that is validated by a custom regex
+Then("the response #{HAVE_ALTERNATION} {field_name} of type {word} that matches {string}") do |field, type, regex|
+    value = field.get_value(@response, type)
+    field.validate_value(@response, value.to_s, Regexp.new(regex))
+end
+
+# response is an object with specific attributes having defined values
+Then("the response #{HAVE_ALTERNATION} (the )(following )attributes:") do |attributes|
+    expected = get_attributes(attributes.hashes)
+    data = @response.get get_root_data_key()
+    raise %/Response did not match:\n#{expected.inspect}\n#{data}/ if data.empty? || !data.deep_include?(expected)
+end
+
+# ARRAY RESPONSE
+
+# response is an array of objects
+Then("the response is a list of/containing {list_has_count} {field_name}") do |list_comparison, item|
     list = @response.get_as_type get_root_data_key(), 'array'
-    raise %/Expected at least #{count} items in array for path '#{get_root_data_key()}', found: #{list.count}\n#{@response.to_json_s}/ if !num_compare(count_mod, list.count, count.to_i)
+    raise %/Expected #{list_comparison.to_string()} items in array for path '#{get_root_data_key()}', found: #{list.count}\n#{@response.to_json_s}/ if !list_comparison.compare(list.count)
 end
 
-Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} (?:the )?(?:following )?(?:data|error )?attributes:$/) do |nesting, attributes|
+# response is an array of objects where the specified number of entries match the defined data attributes
+Then("(the response is a list with ){list_has_count} {word} #{HAVE_ALTERNATION} (the )(following )(data )attributes:") do |list_comparison, item_name, attributes|
     expected = get_attributes(attributes.hashes)
-    groups = nesting
-    grouping = get_grouping(groups)
-    grouping.push({
-        root: true,
-        type: 'single'
-    })
-    data = @response.get get_key(grouping)
-    raise %/Could not find a match for: #{nesting}\n#{expected.inspect}\n#{@response.to_json_s}/ if data.empty? || !nest_match(data, grouping, expected)
+    data = @response.get_as_type get_root_data_key(), 'array'
+    matched = data.select { |item| !item.empty? && item.deep_include?(expected) }
+    raise %/Expected #{list_comparison.to_string()} items in array that matched:\n#{expected.inspect}\n#{data}/ if !list_comparison.compare(matched.count)
 end
 
-Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |nesting|
-    groups = nesting
-    grouping = get_grouping(groups)
-    grouping.push({
+# response is an array of objects where the specified number of entries match the defined data attributes
+Then("(the response is a list with ){list_has_count} {item_name} {list_nesting}") do |list_comparison, item_name, nesting|
+    nesting.push({
         root: true,
-        type: 'single'
+        type: 'multiple',
+        comparison: list_comparison
     })
-    data = @response.get get_key(grouping)
-    raise %/Could not find a match for: #{nesting}\n#{@response.to_json_s}/ if data.empty? || !nest_match(data, grouping, {})
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, {}, false)
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} (?:the )?(?:following )?(?:data )?attributes:$/) do |count_mod, count, nesting, attributes|
+# response is an array of objects where the specified number of entries match the defined data attributes
+Then("(the response is a list with ){list_has_count} {item_name} {list_nesting} #{HAVE_ALTERNATION} (the )(following )(data )attributes:") do |list_comparison, item_name, nesting, attributes|
     expected = get_attributes(attributes.hashes)
-    groups = nesting
-    grouping = get_grouping(groups)
-    grouping.push({
+    nesting.push({
         root: true,
         type: 'multiple',
-        count: count.to_i,
-        count_mod: count_mod
+        comparison: list_comparison
     })
-    data = @response.get get_key(grouping)
-    raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with attributes for: #{nesting}\n#{expected.inspect}\n#{@response.to_json_s}/ if !nest_match(data, grouping, expected)
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{expected.inspect}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, expected, false)
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+)\s?)+)$/) do |count_mod, count, nesting|
-    groups = nesting
-    grouping = get_grouping(groups)
-    grouping.push({
+# response is an array of objects where the specified number of entries match the defined string value
+Then("(the response is a list with ){list_has_count} {item_name} having/containing/with (the )(following )value {string}") do |list_comparison, item_name, value|
+    expected = value
+    data = @response.get_as_type get_root_data_key(), 'array'
+    matched = data.select { |item| !item.empty? && item.include?(expected) }
+    raise %/Expected #{list_comparison.to_string()} items in array that matched:\n#{expected}\n#{data}/ if !list_comparison.compare(matched.count)
+end
+
+# response is an array of objects where the specified number of entries match the defined string value
+Then("(the response is a list with ){list_has_count} {item_name} {list_nesting} #{HAVE_ALTERNATION} (the )(following )value {string}") do |list_comparison, item_name, nesting, value|
+    expected = value
+    nesting.push({
         root: true,
         type: 'multiple',
-        count: count.to_i,
-        count_mod: count_mod
+        comparison: list_comparison
     })
-    data = @response.get get_key(grouping)
-    raise %/Expected #{compare_to_string(count_mod)}#{count} items in array with: #{nesting}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{expected}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, expected, true)
 end
 
-Then(/^the response ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} a list of (#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT} |\d+ )?(\w+)$/) do |nesting, num_mod, num, item|
-    groups = nesting
-    list = {
-        type: 'list',
-        key: get_resource(item)
-    }
-    if (num) then
-        list[:count] = num.to_i
-        list[:count_mod] = num_mod
-    end
-    grouping = [list]
-    grouping.concat(get_grouping(groups))
-    grouping.push({
+# HIERARCHICAL RESPONSE
+
+# response has the specified hierarchy of objects / lists where the specified number of leaf items match the defined data attributes
+Then("the response {list_nesting} #{HAVE_ALTERNATION} (the )(following )attributes:") do |nesting, attributes|
+    expected = get_attributes(attributes.hashes)
+    nesting.push({
         root: true,
         type: 'single'
     })
-    data = @response.get get_key(grouping)
-    raise %/Could not find a match for #{nesting}#{compare_to_string(num_mod)}#{num} #{item}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{expected.inspect}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, expected, false)
 end
 
-Then(/^(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+) (?:.*?) ((?:#{HAVE_SYNONYM} (?:a|an|(?:(?:#{FEWER_MORE_THAN})?\s*#{CAPTURE_INT}|\d+)) (?:\w+) )*)#{HAVE_SYNONYM} a list of (#{FEWER_MORE_THAN})?\s*(?:(#{CAPTURE_INT}|\d+) )?(\w+)$/) do |count_mod, count, nesting, num_mod, num, item|
-    groups = nesting
-    list = {
-        type: 'list',
-        key: get_resource(item)
-    }
-    if (num) then
-        list[:count] = num.to_i
-        list[:count_mod] = num_mod
-    end
-    grouping = [list]
-    grouping.concat(get_grouping(groups))
-    grouping.push({
+# response has the specified hierarchy of objects / lists where the specified number of leaf items match the defined string value
+Then("the response {list_nesting} #{HAVE_ALTERNATION} (the )(following )value {string}") do |nesting, value|
+    expected = value
+    nesting.push({
         root: true,
-        type: 'multiple',
-        count: count.to_i,
-        count_mod: count_mod
+        type: 'single'
     })
-    data = @response.get get_key(grouping)
-    raise %/Expected #{compare_to_string(count_mod)}#{count} items with #{nesting}#{compare_to_string(num_mod)}#{num}#{item}\n#{@response.to_json_s}/ if !nest_match(data, grouping, {})
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{expected}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, expected, true)
 end
 
-# gets the relevant key for the response based on the first key element
-def get_key(grouping)
-    if ENV['error_key'] && !ENV['error_key'].empty? && grouping.count > 1 && grouping[-2][:key].singularize == ENV['error_key'] then
-        get_root_error_key()
-    else
-        get_root_data_key()
-    end
-end
-
-# gets an array in the nesting format that nest_match understands to interrogate nested object and array data
-def get_grouping(nesting)
-    grouping = []
-    while matches = /^#{HAVE_SYNONYM} (?:a|an|(?:(#{FEWER_MORE_THAN})?\s*(#{CAPTURE_INT}|\d+))) (\w+)\s?+/.match(nesting)
-        nesting = nesting[matches[0].length, nesting.length]
-        if matches[2].nil? then
-            level = {
-                type: 'single',
-                key: get_parameter(matches[3]),
-                root: false
-            }
-        else
-            level = {
-                type: 'multiple',
-                key: get_parameter(matches[3]),
-                count: to_num(matches[2]),
-                root: false,
-                count_mod: to_compare(matches[1])
-            }
-        end
-        grouping.push(level)
-    end
-    grouping.reverse
-end
-
-# top level has 2 children with an item containing at most three fish with attributes:
-#
-# nesting = [{key=fish,count=3,count_mod='<=',type=multiple},{key=item,type=single},{key=children,type=multiple,count=2,count_mod='='},{root=true,type=single}]
-#
-# returns true if the expected data is contained within the data based on the nesting information
-def nest_match(data, nesting, expected)
-    return false if !data
-    return data.deep_include?(expected) if nesting.size == 0
-
-    local_nesting = nesting.dup
-    level = local_nesting.pop
-    case level[:type]
-    when 'single' then
-        child_data = level[:root] ? data.dup : data[get_parameter(level[:key])]
-        return nest_match(child_data, local_nesting, expected)
-    when 'multiple' then
-        child_data = level[:root] ? data.dup : data[get_resource(level[:key])]
-        matched = child_data.select { |item| nest_match(item, local_nesting, expected) }
-        return num_compare(level[:count_mod], matched.count, level[:count])
-    when 'list' then
-        child_data = level[:root] ? data.dup : data[get_resource(level[:key])]
-        return false if !child_data.is_a?(Array)
-        if level.has_key?(:count) then
-            return num_compare(level[:count_mod], child_data.count, level[:count])
-        end
-        return true
-    else
-        raise %/Unknown nested data type: #{level[:type]}/
-    end
+# response has the specified hierarchy of objects / lists where the specified number of leaf items is as expected only (no data checked)
+Then("the response {list_nesting}") do |nesting|
+    nesting.push({
+        root: true,
+        type: 'single'
+    })
+    data = @response.get get_key(nesting.grouping)
+    raise %/Could not find a match for: #{nesting.match}\n#{@response.to_json_s}/ if data.empty? || !nest_match_attributes(data, nesting.grouping, {}, false)
 end

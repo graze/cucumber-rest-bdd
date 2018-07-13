@@ -7,7 +7,7 @@ Feature: Handling error responses
     Scenario: Handle errors as a list
         When I request the error "list"
         Then the request fails because the post was not found
-        And the response contains at least one errors
+        And the response contains at least one error
         And the response has one error
         And the response has one error with the attributes:
             | attribute   | type    | value     |

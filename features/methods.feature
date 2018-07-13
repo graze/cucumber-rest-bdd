@@ -87,7 +87,7 @@ Feature: Performing different rest methods
             | Body      | string  | repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt |
 
     Scenario: Update an item with Id
-        When I request to create a post "22" with:
+        When I request to set a post "22" with:
             | attribute | type    | value |
             | Title     | string  | foo   |
             | Body      | string  | bar   |

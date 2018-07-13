@@ -10,9 +10,9 @@ Feature: I can handle different response codes
     Scenario: Key not found
         When I request the post "not-found"
         Then the request fails
-        And it fails because the post was not found
+        And the request fails because the post was not found
 
     Scenario: Resource not found
         When I request the Not Found "5"
         Then the request fails
-        And it fails because the not found was not found
+        And the request fails because the not found was not found
