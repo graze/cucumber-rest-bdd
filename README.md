@@ -1,16 +1,16 @@
 # Cucumber Rest BDD
 
 [![Build Status](https://travis-ci.org/graze/cucumber-rest-bdd.svg?branch=master)](https://travis-ci.org/graze/cucumber-rest-bdd)
-[![](https://images.microbadger.com/badges/image/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/license/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own license badge on microbadger.com")
+[![image](https://images.microbadger.com/badges/image/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own image badge on microbadger.com")
+[![image version](https://images.microbadger.com/badges/version/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own version badge on microbadger.com")
+[![image license](https://images.microbadger.com/badges/license/graze/cucumber-rest-bdd.svg)](https://microbadger.com/images/graze/cucumber-rest-bdd "Get your own license badge on microbadger.com")
 [![Gem Version](https://badge.fury.io/rb/cucumber-rest-bdd.svg)](https://badge.fury.io/rb/cucumber-rest-bdd)
 
 A set of Behavioural tests that can be run against a REST API.
 
 ![Giphy](https://media3.giphy.com/media/Tv7VPg6Os488g/giphy.gif)
 
-This is based from: http://gregbee.ch/blog/effective-api-testing-with-cucumber
+This is based from: [Effective API Testing With Cucumber](http://gregbee.ch/blog/effective-api-testing-with-cucumber)
 
 A list of [Steps](STEPS.md) shows the comparison between Behavioural and Functional tests provided by this package.
 
@@ -21,12 +21,13 @@ You can include this as a gem in your features, or run directly through docker
 **Gem:**
 
 ```bash
-$ gem install cucumber-rest-bdd
+~$ gem install cucumber-rest-bdd
 ```
 
 **Docker:**
+
 ```bash
-$ docker run --rm -v $(pwd):/opt/src -e endpoint=http://server/ graze/cucumber-rest-bdd
+~$ docker run --rm -v $(pwd):/opt/src -e endpoint=http://server/ graze/cucumber-rest-bdd
 ```
 
 ## Configuration
@@ -264,24 +265,26 @@ And the response has the following attributes:
 
 A resource "name" is attempted to be retrieved from the given name of the item to be retrieved. This pluralises, ensures everything is lower case, removes any unparameterisable characters and uses a `-` separator.
 
-```
+```text
 Token -> tokens
 User -> users
-Big Life -> big-lifes
+Big Life -> big-lives
 octopus -> octopi
 ```
 
 If the environment variable: `resource_single` is set to `true` then it will not attempt to pluralise the resources.
 
-```
+```text
 Token -> token
 User -> user
 ```
 
 You can directly pass what you want using:
-```
+
+```text
 `field`
 ```
+
 this will not modify the field.
 
 ## Attributes
@@ -307,8 +310,9 @@ attributes are converted into singular parametrised versions of the provided nam
 
 The conversion is based on the provided environment variables `field_camel` and `field_separator`
 
-**Default**
-```
+#### Default
+
+```text
 field_camel=false
 field_separator=_
 
@@ -317,8 +321,9 @@ Product Id -> product_id
 Bodies -> body
 ```
 
-**CamelCase**
-```
+#### CamelCase
+
+```text
 field_camel=true
 field_separator=_
 
@@ -327,8 +332,9 @@ Product Id -> productId
 Bodies -> body
 ```
 
-**Other separator**
-```
+#### Other Separators
+
+```text
 field_camel=false
 field_separator=-
 

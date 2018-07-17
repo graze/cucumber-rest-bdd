@@ -8,6 +8,7 @@ install:
 - make build
 script:
 - make test
+- make lint
 deploy:
   - provider: rubygems
     api_key:

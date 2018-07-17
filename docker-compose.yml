@@ -21,3 +21,8 @@ services:
             - data_key=
             - error_key=error
             - set_parent_id=true
+
+    rubocop:
+        build: rubocop/.
+        volumes:
+            - .:/src
