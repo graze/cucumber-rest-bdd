@@ -1,8 +1,10 @@
 require 'cucumber-rest-bdd/types'
 
+HAVE_ALTERNATION = 'has/have/having/contain/contains/containing/with'.freeze
 FEWER_MORE_THAN_SYNONYM = '(?:fewer|less|more)\sthan|at\s(?:least|most)'.freeze
 INT_AS_WORDS_SYNONYM = 'zero|one|two|three|four|five|six|seven|eight|nine|ten'
                        .freeze
+MAXIMAL_FIELD_NAME_SYNONYM = '\w+\b(?:(?:\s+:)?\s+\w+\b)*|`[^`]*`'.freeze
 
 ParameterType(
   name: 'list_has_count',
@@ -14,6 +16,7 @@ ParameterType(
   },
   use_for_snippets: false
 )
+
 ParameterType(
   name: 'list_nesting',
   # rubocop:disable Metrics/LineLength
@@ -152,5 +155,6 @@ def to_num(num)
   if num =~ /^(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)$/
     return %w[zero one two three four five six seven eight nine ten].index(num)
   end
+
   num.to_i
 end

@@ -4,6 +4,7 @@ RUN set +xe \
     && apk add -u --no-cache \
     bash \
     su-exec \
+    ca-certificates \
     tini
 
 RUN set +xe \
@@ -12,9 +13,9 @@ RUN set +xe \
     bison \
     bzip2 \
     bzip2-dev \
-    ca-certificates \
     coreutils \
-    dpkg-dev dpkg \
+    dpkg \
+    dpkg-dev \
     gcc \
     gdbm-dev \
     glib-dev \

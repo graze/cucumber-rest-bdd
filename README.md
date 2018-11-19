@@ -10,7 +10,7 @@ A set of Behavioural tests that can be run against a REST API.
 
 ![Giphy](https://media3.giphy.com/media/Tv7VPg6Os488g/giphy.gif)
 
-This is based from: [Effective API Testing With Cucumber](http://gregbee.ch/blog/effective-api-testing-with-cucumber)
+This is based from: [Effective API Testing With Cucumber](https://github.com/gregbeech/website/blob/master/blog/2014/effective-api-testing-with-cucumber.markdown)
 
 A list of [Steps](STEPS.md) shows the comparison between Behavioural and Functional tests provided by this package.
 

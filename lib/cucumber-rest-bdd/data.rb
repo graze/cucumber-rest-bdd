@@ -68,11 +68,13 @@ end
 # parse the field and get the data for a given child
 def get_child_data(level, data)
   return data.dup if level[:root]
+
   level_key = case level[:type]
               when 'single' then parse_field(level[:key])
               when 'multiple', 'list' then parse_list_field(level[:key])
               end
   raise %(Key not found: #{level[:key]} as #{level_key} in #{data}) \
     if data.is_a?(Array) || !data[level_key]
+
   data[level_key]
 end

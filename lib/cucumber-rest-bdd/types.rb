@@ -1,9 +1,7 @@
 require 'active_support/inflector'
 
-HAVE_ALTERNATION = 'has/have/having/contain/contains/containing/with'.freeze
 RESOURCE_NAME_SYNONYM = '\w+\b(?:\s+\w+\b)*?|`[^`]*`'.freeze
 FIELD_NAME_SYNONYM = '\w+\b(?:(?:\s+:)?\s+\w+\b)*?|`[^`]*`'.freeze
-MAXIMAL_FIELD_NAME_SYNONYM = '\w+\b(?:(?:\s+:)?\s+\w+\b)*|`[^`]*`'.freeze
 
 ParameterType(
   name: 'resource_name',
@@ -189,7 +187,9 @@ def merge_arrays(first, second)
                      new_array[n] = if first[n].nil?
                                       second[n]
                                     else
-                                      first[n].merge(second[n])
+                                      first[n].deep_merge!(second[n]) do |_, old, new|
+                                        new.is_a?(Array) ? merge_arrays(old, new) : new
+                                      end
                                     end
                    end
   end

@@ -6,7 +6,7 @@ The following is a list of steps, and their equivalent functional step
 
 ## Setup
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 Given I am a client                                 Given I send and accept JSON
@@ -14,7 +14,7 @@ Given I am a client                                 Given I send and accept JSON
 
 ## Retrieval
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I request an item "2"                          When I send a GET request to "http://url/items/2"
@@ -28,7 +28,7 @@ When I request a list of items with:                When I send a GET request to
 
 ## Creation
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I request to create an item                    When I send a POST request to "http://url/items"
@@ -50,7 +50,7 @@ When I request to replace the item "4" with:        When I set JSON request body
 
 ## Modification
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I request to modify the item "4" with:         When I set JSON request body to:
@@ -62,7 +62,7 @@ When I request to modify the item "4" with:         When I set JSON request body
 
 ## Status Inspection
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 Then the request is successful                      Then the response status should be "200"
@@ -101,7 +101,7 @@ Then the request failed because it was not          Then the response status sho
 
 ## Response Inspection
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 Then the response has the following attributes:     Then the JSON response should have "userId" of type numeric
@@ -143,7 +143,7 @@ Then more than two items have have the following    <N/A>
 
 Using the environment variable: `error_key` to represent the error resource
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 Then the response has one error:                    Then the JSON response should have "errors[0].code" of type
@@ -172,7 +172,7 @@ Then the response has three errors with two links   <N/A>
 
 ### Attribute saving and re-use
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I save "User Id" as "user"                     When I grab "$.userId" as "user"
@@ -181,7 +181,7 @@ And I request the user "{user}"                     And I send a GET request to 
 
 ### Nested requests
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 When I request a list of comments for post "1"      When I send a GET request to "http://url/posts/1/comments"
@@ -208,7 +208,7 @@ When I request to set photo "11" in album "12" to:  When I set JSON request body
 
 ### Nested responses
 
-```
+```text
 Behavioural                                         Functional
 --------------------------------------------------- --------------------------------------------------------------
 Then the response has the following attributes:     Then the JSON response should have "userId" of type numeric
